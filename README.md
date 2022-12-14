@@ -2,7 +2,7 @@
 
 It is a `Promise` compatible type that allows to define and track error types.
 
-## Why is the default Promise definition type is bad?
+## Why is the default Promise definition type bad?
 
 An asynchronous code may throw errors but the standard type of the `Promise` cannot tell you which errors you can handle in the `catch` method. Of course, you can define the error's type explicitly, but you should know what en error can be at the time. It may be hard task, especially if you chaining a lot of promises and each of them may throw an error.
 
@@ -21,7 +21,7 @@ const future: Future<number, Error> = new Promise((resolve, reject) => {
 const promise: Promise<number> = future;
 ```
 
-By using the `Future` you can describe which errors a promise can carry at the time of throwing them and later TypeScript will help you remember and exhaustively handle them.
+By using the `Future` you can describe which errors a promise can throw and TypeScript will help you remember and exhaustively handle them later.
 
 ```typescript
 // using the example above
@@ -31,7 +31,7 @@ future.then(
 );
 ```
 
-> The project doesn't carry any JavaScript code. It contains only the global type definition, so you must continue using plain promises implying that they return the `Future` value.
+> The project doesn't carry any JavaScript code. It contains only the global type definition, so you just continue using plain promises implying that they return the `Future` value.
 
 ## Word from author
 
