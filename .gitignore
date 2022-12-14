@@ -1,0 +1,6 @@
+.vim
+.idea
+.vscode
+.DS_Store
+
+*.sw[po]

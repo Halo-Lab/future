@@ -1,0 +1,13 @@
+{
+  "name": "@halo-lab/future",
+  "type": "module",
+  "author": "Kapelianovych Yevhen",
+  "version": "0.0.1",
+  "license": "MIT",
+  "description": "A better Promise type",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts"
+    }
+  }
+}
