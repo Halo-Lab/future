@@ -59,6 +59,16 @@ future.then(
 );
 ```
 
+> Unfortunately, `await`ed future inside the `try/catch` block cannot populate an error type to the `catch` block, because TypeScript doesn't allow it (even explicitly). Though you can refer to the future type inside the `try` block and easily get what errors are expected to be thrown.
+
 ## Word from author
 
 Have fun ✌️
+
+<a href="https://www.halo-lab.com/?utm_source=github">
+  <img
+    src="https://dgestran.sirv.com/Images/supported-by-halolab.png"
+    alt="Supported by Halo lab"
+    height="60"
+  >
+</a>

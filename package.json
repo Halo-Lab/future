@@ -5,6 +5,15 @@
   "version": "0.0.1",
   "license": "ISC",
   "description": "A better Promise type",
+  "repository": {
+    "url": "https://github.com/Halo-Lab/future",
+    "type": "git"
+  },
+  "keywords": [
+    "Future",
+    "Promise",
+    "TypeScript"
+  ],
   "exports": {
     ".": {
       "types": "./index.d.ts"
