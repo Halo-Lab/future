@@ -3,4 +3,5 @@
 .vscode
 .DS_Store
 
+.npmrc
 *.sw[po]

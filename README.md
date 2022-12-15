@@ -4,7 +4,7 @@ It is a `Promise` compatible type that allows to define and track error types.
 
 ## Why is the default Promise definition type bad?
 
-An asynchronous code may throw errors but the standard type of the `Promise` cannot tell you which errors you can handle in the `catch` method. Of course, you can define the error's type explicitly, but you should know what en error can be at the time. It may be hard task, especially if you chaining a lot of promises and each of them may throw an error.
+An asynchronous code may throw errors but the standard type of the `Promise` cannot tell you which errors you can handle in the `catch` method. Of course, you can define the error's type explicitly, but you should know what en error can be at the time. It may be hard task, especially if you are chaining a lot of promises and each of them may throw an error.
 
 ## Installation
 
