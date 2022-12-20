@@ -2,7 +2,7 @@
   "name": "@halo-lab/future",
   "type": "module",
   "author": "Kapelianovych Yevhen",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "license": "ISC",
   "description": "A better Promise type",
   "repository": {
@@ -12,7 +12,9 @@
   "keywords": [
     "Future",
     "Promise",
-    "TypeScript"
+    "FutureLike",
+    "TypeScript",
+    "PromiseLike"
   ],
   "exports": {
     ".": {

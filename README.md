@@ -36,7 +36,7 @@ Otherwise, you can import it straight to your code in the same way as to the def
 
 ## Usage
 
-This package defines a `Future` type which you can use instead of the `Promise`. Those types are interchangeable.
+This package defines a `Future`/`FutureLike` types which you can use instead of the `Promise`/`PromiseLike`. Those types are interchangeable.
 
 ```typescript
 const future: Future<number, Error> = new Promise((resolve, reject) => {
