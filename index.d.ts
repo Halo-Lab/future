@@ -7,6 +7,8 @@ declare global {
   }
 
   interface Future<T, E> {
+    readonly [Symbol.toStringTag]: string;
+
     readonly then: <K = T, O = E, W = K>(
       onfulfilled?: ((value: T) => K | FutureLike<K, O>) | null | undefined,
       onrejected?: ((error: E) => W | FutureLike<W, O>) | null | undefined

@@ -2,7 +2,7 @@
   "name": "@halo-lab/future",
   "type": "module",
   "author": "Kapelianovych Yevhen",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "license": "ISC",
   "description": "A better Promise type",
   "repository": {
@@ -20,5 +20,17 @@
     ".": {
       "types": "./index.d.ts"
     }
+  },
+  "files": [
+    "LICENSE",
+    "README.md",
+    "index.d.ts",
+    "package.json"
+  ],
+  "scripts": {
+    "test": "tsd"
+  },
+  "devDependencies": {
+    "tsd": "^0.25.0"
   }
 }
