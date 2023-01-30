@@ -2,7 +2,7 @@
   "name": "@halo-lab/future",
   "type": "module",
   "author": "Kapelianovych Yevhen",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "license": "ISC",
   "description": "A better Promise type",
   "repository": {
