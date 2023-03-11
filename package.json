@@ -31,6 +31,6 @@
     "test": "tsd"
   },
   "devDependencies": {
-    "tsd": "^0.25.0"
+    "tsd": "^0.27.0"
   }
 }

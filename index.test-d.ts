@@ -189,7 +189,7 @@ import ".";
   // Manually provided error types should be included into the resulting
   // Future type if onrejected callback returns the Promise type.
   expectType<Future<string | boolean, ReferenceError>>(
-    future.catch<ReferenceError, boolean>(() => promise)
+    future.catch<boolean, ReferenceError>(() => promise)
   );
 
   // Expect the finally method to return the same type of the
