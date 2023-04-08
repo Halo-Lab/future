@@ -1,10 +1,10 @@
 import { expectAssignable, expectType } from "tsd";
 
-import ".";
+import Future from "./index.d";
 
 // FutureLike section
 {
-  const futureLike: FutureLike<string, TypeError> = Promise.resolve("");
+  const futureLike: Future.Like<string, TypeError> = Promise.resolve("");
 
   const promiseLike: PromiseLike<number> = Promise.resolve(8);
 
@@ -12,10 +12,10 @@ import ".";
   expectAssignable<PromiseLike<string>>(futureLike);
 
   // Expect the PromiseLike is assignable to the FutureLike.
-  expectAssignable<FutureLike<number, Error>>(promiseLike);
+  expectAssignable<Future.Like<number, Error>>(promiseLike);
 
   // Empty then should return of the same FutureLike type.
-  expectType<FutureLike<string, TypeError>>(futureLike.then());
+  expectType<Future.Like<string, TypeError>>(futureLike.then());
 
   // Expect the fulfilled type in the then method is the same as in the FutureLike.
   futureLike.then((value) => expectType<string>(value));
@@ -25,22 +25,22 @@ import ".";
 
   // Then with the onfulfilled parameter should return a new fulfilled type
   // and the same error type if the callback does not return the FutureLike.
-  expectType<FutureLike<number, TypeError>>(futureLike.then(() => 8));
+  expectType<Future.Like<number, TypeError>>(futureLike.then(() => 8));
 
   // If the onrejected callback returns a non-PromiseLike value, inferred
   // error value should be "never".
-  expectType<FutureLike<string, never>>(futureLike.then(null, () => ""));
+  expectType<Future.Like<string, never>>(futureLike.then(null, () => ""));
 
   // The onrejected callback is allowed to return a different fulfilled
   // value from which the main FutureLike holds. The final type will be
   // the union of the new type and the futureLike's fulfilled type.
-  expectType<FutureLike<string | number, never>>(
+  expectType<Future.Like<string | number, never>>(
     futureLike.then(null, () => 4)
   );
 
   // then method is allowed to return different values from onfulfilled
   // and onrejected callbacks.
-  expectType<FutureLike<boolean | string[], never>>(
+  expectType<Future.Like<boolean | string[], never>>(
     futureLike.then(
       () => false,
       () => [""]
@@ -56,16 +56,16 @@ import ".";
 {
   const promise: Promise<boolean> = Promise.resolve(true);
 
-  const future: Future<string, EvalError> = Promise.reject<string>();
+  const future: Future.Self<string, EvalError> = Promise.reject<string>();
 
   // Expect that Future is assignable to Promise.
   expectAssignable<Promise<string>>(future);
 
   // Expect that Promise is assignable to Future.
-  expectAssignable<Future<boolean, Error>>(promise);
+  expectAssignable<Future.Self<boolean, Error>>(promise);
 
   // Expect the empty then method returns the same type.
-  expectType<Future<string, EvalError>>(future.then());
+  expectType<Future.Self<string, EvalError>>(future.then());
 
   // Expect the fulfilled type in the then method is the same as in the Future.
   future.then((value) => expectType<string>(value));
@@ -75,43 +75,43 @@ import ".";
 
   // The onfulfilled callback should return the Future with another
   // fulfilled type but the same error type.
-  expectType<Future<number, EvalError>>(future.then(() => 4));
+  expectType<Future.Self<number, EvalError>>(future.then(() => 4));
 
   {
-    const other = <A>(value: A): Future<A, SyntaxError> =>
+    const other = <A>(value: A): Future.Self<A, SyntaxError> =>
       Promise.resolve(value);
 
     // Expect the resulting Future to inherit an error type
     // from the returned Future of the onfulfilled callback.
-    expectType<Future<string, EvalError | SyntaxError>>(
+    expectType<Future.Self<string, EvalError | SyntaxError>>(
       future.then((value) => other(value))
     );
   }
 
   // If the onrejected callback does not return a Future, an error
   // type of the resulting Future has to be never.
-  expectType<Future<string, never>>(future.then(null, () => ""));
+  expectType<Future.Self<string, never>>(future.then(null, () => ""));
 
   // The onrejected callback may return another fulfilled type.
-  expectType<Future<string | boolean, never>>(future.then(null, () => false));
+  expectType<Future.Self<string | boolean, never>>(future.then(null, () => false));
 
   {
-    const other: Future<boolean, SyntaxError> = Promise.resolve(true);
+    const other: Future.Self<boolean, SyntaxError> = Promise.resolve(true);
 
     // If the onrejected callback returns a Future, the resulting Future type
     // should inherit an error type of the callback's Future.
-    expectType<Future<string | boolean, SyntaxError>>(
+    expectType<Future.Self<string | boolean, SyntaxError>>(
       future.then(null, () => other)
     );
   }
 
   {
-    const other: Future<string[], TypeError> = Promise.resolve([]);
-    const other2: Future<number, RangeError> = Promise.resolve(7);
+    const other: Future.Self<string[], TypeError> = Promise.resolve([]);
+    const other2: Future.Self<number, RangeError> = Promise.resolve(7);
 
     // The onfulfilled and onrejected callback should be able to
     // return Futures with different error and fulfilled types.
-    expectType<Future<number | string[], TypeError | RangeError>>(
+    expectType<Future.Self<number | string[], TypeError | RangeError>>(
       future.then(
         () => other,
         () => other2
@@ -122,7 +122,7 @@ import ".";
   // If both onfulfilled and onrejected callbacks do not return
   // futures, the resulting Future type should have an error type
   // as never.
-  expectType<Future<number | boolean, never>>(
+  expectType<Future.Self<number | boolean, never>>(
     future.then(
       () => 3,
       () => false
@@ -131,22 +131,22 @@ import ".";
 
   // Expect the resulting Future to have "any" as an error type
   // if the onfulfilled callback returns the Promise type.
-  expectType<Future<boolean, any>>(future.then(() => promise));
+  expectType<Future.Self<boolean, any>>(future.then(() => promise));
 
   // After manually providing an error type for the returned Promise type
   // from the onfulfilled callback, the resulting Future should have
   // the union error type.
-  expectType<Future<boolean, EvalError | MediaError>>(
+  expectType<Future.Self<boolean, EvalError | MediaError>>(
     future.then<boolean, MediaError>(() => promise)
   );
 
   // Expect the Future type to have an error type as any if the onrejected
   // callback returns the raw Promise type.
-  expectType<Future<string | boolean, any>>(future.then(null, () => promise));
+  expectType<Future.Self<string | boolean, any>>(future.then(null, () => promise));
 
   // Expect the resulting Future to inherit the error type provided
   // manually for the Promise returned from the onrejected callback.
-  expectType<Future<string | boolean, ReferenceError>>(
+  expectType<Future.Self<string | boolean, ReferenceError>>(
     future.then<boolean, ReferenceError>(null, () => promise)
   );
 
@@ -156,7 +156,7 @@ import ".";
 
     // There should be ability to manually define all return types
     // for the onfulfilled and onrejected callbacks.
-    expectType<Future<number | {}[], MediaError | AggregateError>>(
+    expectType<Future.Self<number | {}[], MediaError | AggregateError>>(
       future.then<{}[], MediaError, number, AggregateError>(
         () => other,
         () => other2
@@ -168,33 +168,33 @@ import ".";
   future.catch((error) => expectType<EvalError>(error));
 
   // Expect the empty catch method to return the same Future type.
-  expectType<Future<string, EvalError>>(future.catch());
+  expectType<Future.Self<string, EvalError>>(future.catch());
 
   // Expect the catch method to return Future with never as an error
   // type if the onrejected callback returns a non-Future value.
-  expectType<Future<string | number, never>>(future.catch(() => 8));
+  expectType<Future.Self<string | number, never>>(future.catch(() => 8));
 
   {
-    const other: Future<string, MediaError> = Promise.resolve("");
+    const other: Future.Self<string, MediaError> = Promise.resolve("");
 
     // Expect the resulting Future to inherit an error type from the Future
     // returned by the onrejected callback.
-    expectType<Future<string, MediaError>>(future.catch(() => other));
+    expectType<Future.Self<string, MediaError>>(future.catch(() => other));
   }
 
   // Expect the Future to have an error type as any if onrejected callback
   // returns the Promise.
-  expectType<Future<string | boolean, any>>(future.catch(() => promise));
+  expectType<Future.Self<string | boolean, any>>(future.catch(() => promise));
 
   // Manually provided error types should be included into the resulting
   // Future type if onrejected callback returns the Promise type.
-  expectType<Future<string | boolean, ReferenceError>>(
+  expectType<Future.Self<string | boolean, ReferenceError>>(
     future.catch<boolean, ReferenceError>(() => promise)
   );
 
   // Expect the finally method to return the same type of the
   // outer future even if the callback returns another.
-  expectType<Future<string, EvalError>>(
+  expectType<Future.Self<string, EvalError>>(
     future.finally(() =>
       future.then(
         () => 5,
