@@ -112,8 +112,8 @@ export function map<T, E, R>(futureLike: FutureLike<T, E>, callback: (value: T) 
 export function mapErr<T, E, R>(callback: (value: E) => R | FutureLike<T, R>): (futureLike: FutureLike<T, E>) => Future<T, R>;
 export function mapErr<T, E, R>(futureLike: FutureLike<T, E>, callback: (value: E) => R | FutureLike<T, R>): Future<T, R>;
 
-export function recover<T, E, R>(callback: (value: E) => R | FutureLike<R, never>): (futureLike: FutureLike<T, E>) => Future<R, never>;
-export function recover<T, E, R>(futureLike: FutureLike<T, E>, callback: (value: E) => R | FutureLike<R, never>): Future<R, never>;
+export function recover<T, E, R = T>(callback: (value: E) => R | FutureLike<R, never>): (futureLike: FutureLike<T, E>) => Future<T | R, never>;
+export function recover<T, E, R = T>(futureLike: FutureLike<T, E>, callback: (value: E) => R | FutureLike<R, never>): Future<T | R, never>;
 
 export function after<T, E>(callback: VoidFunction): (futureLike: FutureLike<T, E>) => Future<T, E>;
 export function after<T, E>(futureLike: FutureLike<T, E>, callback: VoidFunction): Future<T, E>;
