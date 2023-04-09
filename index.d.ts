@@ -94,7 +94,7 @@ type MergeResolvedTypes<T extends readonly unknown[]> = Awaited<T[number]>;
 
 type MergeRejectedTypes<T extends readonly unknown[], R = never> = T extends readonly []
   // Guard against the PromiseLike type, because it has error type as any.
-  ? any extends R ? unknown : R
+  ? unknown extends R ? unknown : R
   : T extends readonly [infer A, ...infer Rest]
   ? A extends FutureLike<unknown, infer B>
   ? MergeRejectedTypes<Rest, B | R>
