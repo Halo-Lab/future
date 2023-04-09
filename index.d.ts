@@ -106,15 +106,31 @@ export function settle<const P extends readonly unknown[]>(futureLikes: P): Futu
 export function settle<T, E>(futureLikes: Iterable<T | FutureLike<T, E>> | ArrayLike<T | FutureLike<T, E>>): Future<readonly Result<T, E>[], never>;
 export function settle<const P extends readonly unknown[]>(...futureLikes: P): Future<CollectBoth<P>, never>;
 
+export function map<T, E, R>(callback: (value: T) => R | FutureLike<R, E>): (futureLike: FutureLike<T, E>) => Future<R, E>;
+export function map<T, E, R>(futureLike: FutureLike<T, E>, callback: (value: T) => R | FutureLike<R, E>): Future<R, E>;
+
+export function mapErr<T, E, R>(callback: (value: E) => R | FutureLike<T, R>): (futureLike: FutureLike<T, E>) => Future<T, R>;
+export function mapErr<T, E, R>(futureLike: FutureLike<T, E>, callback: (value: E) => R | FutureLike<T, R>): Future<T, R>;
+
+export function recover<T, E, R>(callback: (value: E) => R | FutureLike<R, never>): (futureLike: FutureLike<T, E>) => Future<R, never>;
+export function recover<T, E, R>(futureLike: FutureLike<T, E>, callback: (value: E) => R | FutureLike<R, never>): Future<R, never>;
+
+export function after<T, E>(callback: VoidFunction): (futureLike: FutureLike<T, E>) => Future<T, E>;
+export function after<T, E>(futureLike: FutureLike<T, E>, callback: VoidFunction): Future<T, E>;
+
 type _of = typeof of;
 type _is = typeof isThenable;
+type _map = typeof map;
 type _make = typeof make;
 type _oneOf = typeof oneOf;
 type _merge = typeof merge;
 type _spawn = typeof spawn;
 type _first = typeof first;
+type _after = typeof after;
+type _mapErr = typeof mapErr;
 type _settle = typeof settle;
 type _failed = typeof failed;
+type _recover = typeof recover;
 
 declare namespace Future {
   export type Self<T, E> = Future<T, E>;
@@ -122,13 +138,17 @@ declare namespace Future {
 
   export const of: _of;
   export const is: _is;
+  export const map: _map;
   export const make: _make;
   export const oneOf: _oneOf;
   export const merge: _merge;
   export const spawn: _spawn;
   export const first: _first;
+  export const after: _after;
+  export const mapErr: _mapErr;
   export const settle: _settle;
   export const failed: _failed;
+  export const recover: _recover;
 }
 
 export default Future;

@@ -62,15 +62,45 @@ export function settle(...futureLikes) {
 	);
 }
 
+export function map(futureLike, callback) {
+	return typeof futureLike === 'function'
+		? (actualFutureLike) => map(actualFutureLike, futureLike)
+		: futureLike.then(callback);
+}
+
+export function mapErr(futureLike, callback) {
+	return typeof futureLike === 'function'
+		? (actualFutureLike) => mapErr(actualFutureLike, futureLike)
+		: futureLike.catch(async (error) => {
+			throw await callback(error);
+		});
+}
+
+export function recover(futureLike, callback) {
+	return typeof futureLike === 'function'
+		? (actualFutureLike) => recover(actualFutureLike, futureLike)
+		: actualFutureLike.catch(callback);
+}
+
+export function after(futureLike, callback) {
+	return typeof futureLike === 'function'
+		? (actualFutureLike) => after(actualFutureLike, futureLike)
+		: actualFutureLike.finally(callback);
+}
+
 export default {
 	of,
+	map,
 	make,
 	merge,
 	oneOf,
 	spawn,
 	first,
+	after,
 	failed,
 	settle,
+	recover,
+	mapErr,
 	isThenable
 }
 
