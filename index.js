@@ -1,5 +1,13 @@
+function isObject(value) {
+	return value != null && typeof value === 'object';
+}
+
 export function isThenable(value) {
-	return value !== null && typeof value === 'object' && 'then' in value && typeof value.then === 'function';
+	return isObject(value) && typeof value.then === 'function';
+}
+
+function isIterable(value) {
+	return isObject(value) && typeof value[Symbol.iterator] === 'function';
 }
 
 export function spawn(callback, parameters = []) {
@@ -14,8 +22,14 @@ export function spawn(callback, parameters = []) {
 	});
 }
 
+function flatFutureLikes(futureLikes) {
+	return futureLikes.length === 1 && isIterable(futureLikes[0])
+		? futureLikes[0]
+		: futureLikes;
+}
+
 export function merge(...futureLikes) {
-	return Promise.all(futureLikes);
+	return Promise.all(flatFutureLikes(futureLikes));
 }
 
 export function of(value) {
@@ -29,15 +43,34 @@ export function failed(value) {
 }
 
 export function first(...futureLikes) {
-	return Promise.race(futureLikes);
+	return Promise.race(flatFutureLikes(futureLikes));
+}
+
+export function make(executor) {
+	return new Promise(executor);
+}
+
+export function oneOf(...futureLikes) {
+	return Promise.any(flatFutureLikes(futureLikes));
+}
+
+export function settle(...futureLikes) {
+	return Promise.allSettled(
+		Array.from(flatFutureLikes(futureLikes)).map(
+			(like) => like.then((ok) => ({ ok }), (err) => ({ err }))
+		)
+	);
 }
 
 export default {
 	of,
+	make,
 	merge,
+	oneOf,
 	spawn,
 	first,
 	failed,
+	settle,
 	isThenable
 }
 
