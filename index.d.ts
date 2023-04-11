@@ -164,19 +164,19 @@ export function map<T, E, R>(callback: (value: T) => R | PromiseLike<R>): (promi
 export function map<T, E, R>(futureLike: FutureLike<T, E>, callback: (value: T) => R | FutureLike<R, E>): Future<R, E>
 export function map<T, E, R>(promiseLike: PromiseLike<T>, callback: (value: T) => R | PromiseLike<R>): Future<R, E>
 
-export function mapErr<T, E, K, R>(callback: (value: E) => FutureLike<K, R>): (futureLike: FutureLike<T, E>) => Future<T, K | R>
-export function mapErr<T, E, K, R>(callback: (value: E) => PromiseLike<K>): (promiseLike: PromiseLike<T>) => Future<T, K | R>
-export function mapErr<T, E, K>(callback: (value: E) => K): (futureLike: FutureLike<T, E>) => Future<T, K>
-export function mapErr<T, E, K>(callback: (value: E) => K): (promiseLike: PromiseLike<T>) => Future<T, K>
+export function mapErr<E, K, R>(callback: (value: E) => FutureLike<K, R>): <T>(futureLike: FutureLike<T, E>) => Future<T, K | R>
+export function mapErr<E, K, R>(callback: (value: E) => PromiseLike<K>): <T>(promiseLike: PromiseLike<T>) => Future<T, K | R>
+export function mapErr<E, K>(callback: (value: E) => K): <T>(futureLike: FutureLike<T, E>) => Future<T, K>
+export function mapErr<E, K>(callback: (value: E) => K): <T>(promiseLike: PromiseLike<T>) => Future<T, K>
 export function mapErr<T, E, K, R>(futureLike: FutureLike<T, E>, callback: (value: E) => FutureLike<K, R>): Future<T, K | R>
 export function mapErr<T, E, K, R>(promiseLike: PromiseLike<T>, callback: (value: E) => PromiseLike<K>): Future<T, K | R>
 export function mapErr<T, E, K>(futureLike: FutureLike<T, E>, callback: (value: E) => K): Future<T, K>
 export function mapErr<T, E, K>(promiseLike: PromiseLike<T>, callback: (value: E) => K): Future<T, K>
 
-export function recover<T, E, R = T>(callback: (value: E) => R | FutureLike<R, never>): (futureLike: FutureLike<T, E>) => Future<T | R, never>
-export function recover<T, E, R = T>(callback: (value: E) => R | PromiseLike<R>): (promiseLike: PromiseLike<T>) => Future<T | R, unknown>
+export function recover<E, R>(callback: (value: E) => R | FutureLike<R, never>): <T = R>(futureLike: FutureLike<T, E>) => Future<T | R, never>
+export function recover<E, R, K = unknown>(callback: (value: E) => R | PromiseLike<R>): <T = R>(promiseLike: PromiseLike<T>) => Future<T | R, K>
 export function recover<T, E, R = T>(futureLike: FutureLike<T, E>, callback: (value: E) => R | FutureLike<R, never>): Future<T | R, never>
-export function recover<T, E, R = T>(promiseLike: PromiseLike<T>, callback: (value: E) => R | PromiseLike<R>): Future<T | R, unknown>
+export function recover<T, E, R = T, K = unknown>(promiseLike: PromiseLike<T>, callback: (value: E) => R | PromiseLike<R>): Future<T | R, K>
 
 export function after<T, E>(callback: () => FutureLike<T, E>): <A, K>(futureLike: FutureLike<A, K>) => Future<T, E | K>
 export function after<T, E>(callback: () => PromiseLike<T>): <A, K>(promiseLike: PromiseLike<A>) => Future<T, E | K>
