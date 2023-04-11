@@ -55,13 +55,26 @@ export function make(executor) {
 }
 
 export function oneOf(...futureLikes) {
-	return Promise.any(flatFutureLikes(futureLikes))
+	return make((ok, err) => {
+		const errors = []
+
+		Array.from(flatFutureLikes(futureLikes))
+			.forEach(
+				(futureLike, index, list) => of(futureLike).then(
+					ok,
+					(error) =>
+						errors.length === list.length
+							? err(errors)
+							: (errors[index] = error)
+				)
+			)
+	})
 }
 
 export function settle(...futureLikes) {
 	return Promise.all(
 		Array.from(flatFutureLikes(futureLikes)).map(
-			(like) => like.then((ok) => ({ ok }), (err) => ({ err }))
+			(like) => of(like).then((ok) => ({ ok }), (err) => ({ err }))
 		)
 	)
 }
