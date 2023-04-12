@@ -57,15 +57,18 @@ export function make(executor) {
 export function oneOf(...futureLikes) {
 	return make((ok, err) => {
 		const errors = []
+		let settledErrorsAmount = 0;
 
 		Array.from(flatFutureLikes(futureLikes))
 			.forEach(
 				(futureLike, index, list) => of(futureLike).then(
 					ok,
-					(error) =>
-						errors.length === list.length
-							? err(errors)
-							: (errors[index] = error)
+					(error) => {
+						errors[index] = error
+						settledErrorsAmount += 1
+
+						settledErrorsAmount === list.length && err(errors)
+					}
 				)
 			)
 	})
