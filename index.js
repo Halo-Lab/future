@@ -97,13 +97,13 @@ export function mapErr(futureLike, callback) {
 export function recover(futureLike, callback) {
 	return isFunction(futureLike)
 		? (actualFutureLike) => recover(actualFutureLike, futureLike)
-		: actualFutureLike.then(null, callback)
+		: futureLike.then(null, callback)
 }
 
 export function after(futureLike, callback) {
 	return isFunction(futureLike)
 		? (actualFutureLike) => after(actualFutureLike, futureLike)
-		: actualFutureLike.then(
+		: futureLike.then(
 			(value) => of(callback()).then(() => value),
 			(error) => of(callback()).then(() => failed(error))
 		)
