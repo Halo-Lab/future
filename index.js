@@ -15,13 +15,11 @@ function isIterable(value) {
 }
 
 export function spawn(callback, parameters = []) {
-	return new Promise((resolve, reject) => {
+	return make((ok, err) => {
 		try {
-			const result = callback(...parameters)
-
-			isThenable(result) ? result.then(resolve, reject) : resolve(result)
+			ok(callback(...parameters))
 		} catch (error) {
-			reject(error)
+			err(error)
 		}
 	})
 }
