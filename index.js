@@ -38,10 +38,8 @@ export function of(value) {
 	return Promise.resolve(value)
 }
 
-export function failed(value) {
-	return spawn(async () => {
-		throw await value
-	})
+export async function failed(value) {
+	throw await value
 }
 
 export function first(...futureLikes) {
