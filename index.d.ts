@@ -1,4 +1,28 @@
+/**
+ * A type-only symbol that will hold a fulfilled type to strictly catch
+ * unassignable types when TypScript cannot differentiate it based on the
+ * `then` signature.
+ *
+ * TypeScript allows assigning types with unassignable properties if
+ * one of the types contains an overloaded property and at least one
+ * overloaded member **is** assignable to the same property from
+ * other type.
+ */
+declare const fulfilled_type: unique symbol
+
+declare global {
+  interface PromiseLike<T> {
+    readonly [fulfilled_type]: T
+  }
+
+  interface Promise<T> {
+    readonly [fulfilled_type]: T
+  }
+}
+
 export interface FutureLike<T, E> {
+  readonly [fulfilled_type]: T
+
   then(
     onfulfilled?: null | undefined,
     onrejected?: null | undefined
@@ -33,6 +57,7 @@ export interface FutureLike<T, E> {
 }
 
 export interface Future<T, E> {
+  readonly [fulfilled_type]: T
   readonly [Symbol.toStringTag]: string
 
   then(

@@ -1,4 +1,4 @@
-import { expectAssignable, expectType } from "tsd"
+import { expectAssignable, expectNotAssignable, expectType } from "tsd"
 
 import Future from "./index.d"
 
@@ -7,6 +7,8 @@ import Future from "./index.d"
   const futureLike: Future.Like<string, TypeError> = Promise.resolve("")
 
   const promiseLike: PromiseLike<number> = Promise.resolve(8)
+
+  expectNotAssignable<PromiseLike<boolean>>(futureLike)
 
   // Expect the FutureLike is assignable to the PromiseLike.
   expectAssignable<PromiseLike<string>>(futureLike)
@@ -57,6 +59,8 @@ import Future from "./index.d"
   const promise: Promise<boolean> = Promise.resolve(true)
 
   const future: Future.Self<string, EvalError> = Promise.reject<string>()
+
+  expectNotAssignable<Promise<boolean>>(future)
 
   // Expect that Future is assignable to Promise.
   expectAssignable<Promise<string>>(future)
