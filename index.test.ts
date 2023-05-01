@@ -1,0 +1,5 @@
+import './is.test.js'
+import './of.test.js'
+import './make.test.js'
+import './spawn.test.js'
+import './failed.test.js'

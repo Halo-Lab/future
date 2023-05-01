@@ -12,16 +12,16 @@ declare const fulfilled_type: unique symbol
 
 declare global {
   interface PromiseLike<T> {
-    readonly [fulfilled_type]: T
+    readonly [fulfilled_type]?: T
   }
 
   interface Promise<T> {
-    readonly [fulfilled_type]: T
+    readonly [fulfilled_type]?: T
   }
 }
 
 export interface FutureLike<T, E> {
-  readonly [fulfilled_type]: T
+  readonly [fulfilled_type]?: T
 
   then(
     onfulfilled?: null | undefined,
@@ -57,7 +57,7 @@ export interface FutureLike<T, E> {
 }
 
 export interface Future<T, E> {
-  readonly [fulfilled_type]: T
+  readonly [fulfilled_type]?: T
   readonly [Symbol.toStringTag]: string
 
   then(
@@ -146,12 +146,13 @@ export function merge<T, E>(list: Iterable<T | FutureLike<T, E>> | ArrayLike<T |
 export function merge<T, E>(list: Iterable<T | PromiseLike<T>> | ArrayLike<T | PromiseLike<T>>): Future<readonly T[], E>
 export function merge<const P extends readonly unknown[]>(...list: P): Future<CollectResolvedTypes<P>, MergeRejectedTypes<P>>
 
-export function of<T, E>(value: T | FutureLike<T, E>): Future<T, E>
-export function of<T, E>(value: T | PromiseLike<T>): Future<T, E>
+export function of<T, E>(value: FutureLike<T, E>): Future<T, E>
+export function of<T, E>(value: PromiseLike<T>): Future<T, E>
+export function of<const T>(value: T): Future<T, never>
 
 export function failed<T, E>(value: FutureLike<T, E>): Future<never, T | E>
 export function failed<T, E>(value: PromiseLike<T>): Future<never, T | E>
-export function failed<E>(value: E): Future<never, E>
+export function failed<const E>(value: E): Future<never, E>
 
 export function first<const P extends readonly unknown[]>(list: P): Future<MergeResolvedTypes<P>, MergeRejectedTypes<P>>
 export function first<T, E>(list: Iterable<T | FutureLike<T, E>> | ArrayLike<T | FutureLike<T, E>>): Future<T, E>
