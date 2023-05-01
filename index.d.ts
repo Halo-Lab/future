@@ -136,10 +136,12 @@ export function isThenable<T>(value: PromiseLike<T>): true
 export function isThenable<T, E>(value: FutureLike<T, E>): true
 export function isThenable<T, E>(value: unknown): value is FutureLike<T, E>
 
-export function spawn<T, E>(callback: () => T | FutureLike<T, E>): Future<T, E>
-export function spawn<T, E>(callback: () => T | PromiseLike<T>): Future<T, E>
-export function spawn<T, E, const P extends readonly unknown[]>(callback: (...args: P) => T | FutureLike<T, E>, parameters: P): Future<T, E>
-export function spawn<T, E, const P extends readonly unknown[]>(callback: (...args: P) => T | PromiseLike<T>, parameters: P): Future<T, E>
+export function spawn<T, E>(callback: () => FutureLike<T, E>): Future<T, E>
+export function spawn<T, E>(callback: () => PromiseLike<T>): Future<T, E>
+export function spawn<T, E = never>(callback: () => T): Future<T, E>
+export function spawn<T, E, const P extends readonly unknown[]>(callback: (...args: P) => FutureLike<T, E>, parameters: P): Future<T, E>
+export function spawn<T, E, const P extends readonly unknown[]>(callback: (...args: P) => PromiseLike<T>, parameters: P): Future<T, E>
+export function spawn<T, E = never, const P extends readonly unknown[] = readonly unknown[]>(callback: (...args: P) => T, parameters: P): Future<T, E>
 
 export function merge<const P extends readonly unknown[]>(list: P): Future<CollectResolvedTypes<P>, MergeRejectedTypes<P>>
 export function merge<T, E>(list: Iterable<T | FutureLike<T, E>> | ArrayLike<T | FutureLike<T, E>>): Future<readonly T[], E>

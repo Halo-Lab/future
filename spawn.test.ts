@@ -4,7 +4,7 @@ import { equal } from 'node:assert/strict'
 import Future from './index.js'
 
 test('spawn should resolve with a callback\'s result', async () => {
-	const a = Future.spawn<7, string>(() => {
+	const a = Future.spawn<number, string>(() => {
 		const i: boolean = true
 
 		if (i) return 7
@@ -15,7 +15,7 @@ test('spawn should resolve with a callback\'s result', async () => {
 })
 
 test('spawn should create a failed Future with a thrown error', async () => {
-	const a = Future.spawn<7, string>(() => {
+	const a = Future.spawn<number, string>(() => {
 		const i: boolean = false
 
 		if (i) return 7
@@ -37,4 +37,10 @@ test('spawn should pass through returned Future', async (context) => {
 
 		return a.catch((e) => equal(e, 3))
 	})
+})
+
+test('spawn can accept parameters for the callback', async () => {
+	const a = Future.spawn((n: number) => n ** 2, [3]);
+
+	return a.then((n) => equal(n, 9))
 })
