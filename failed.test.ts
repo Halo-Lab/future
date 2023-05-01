@@ -21,7 +21,7 @@ test('failed function should fail future with a value', async () => {
 
 test('failed function rejects a passed Future', async (context) => {
 	await context.test('fulfilled Future', async () => {
-		const a: Future.Self<never, number> = Future.failed(Future.of(8));
+		const a: Future.Self<never, number> = Future.failed(Future.of(8))
 
 		return a.catch((n) => equal(n, 8))
 	})

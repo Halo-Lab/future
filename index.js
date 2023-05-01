@@ -53,7 +53,7 @@ export function make(executor) {
 export function oneOf(...futureLikes) {
 	return make((ok, err) => {
 		const errors = []
-		let settledErrorsAmount = 0;
+		let settledErrorsAmount = 0
 
 		Array.from(flatFutureLikes(futureLikes))
 			.forEach(
