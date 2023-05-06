@@ -38,7 +38,7 @@ export function of(value) {
 	return Promise.resolve(value)
 }
 
-export async function failed(value) {
+export async function fail(value) {
 	throw await value
 }
 
@@ -87,7 +87,7 @@ export function map(futureLike, callback) {
 export function mapErr(futureLike, callback) {
 	return isFunction(futureLike)
 		? (actualFutureLike) => mapErr(actualFutureLike, futureLike)
-		: futureLike.then(null, (error) => failed(callback(error)))
+		: futureLike.then(null, (error) => fail(callback(error)))
 }
 
 export function recover(futureLike, callback) {
@@ -101,7 +101,7 @@ export function after(futureLike, callback) {
 		? (actualFutureLike) => after(actualFutureLike, futureLike)
 		: futureLike.then(
 			(value) => of(callback()).then(() => value),
-			(error) => of(callback()).then(() => failed(error))
+			(error) => of(callback()).then(() => fail(error))
 		)
 }
 
@@ -109,6 +109,7 @@ export default {
 	of,
 	is: isThenable,
 	map,
+	fail,
 	make,
 	oneOf,
 	merge,
@@ -117,7 +118,6 @@ export default {
 	after,
 	mapErr,
 	settle,
-	failed,
 	recover,
 }
 

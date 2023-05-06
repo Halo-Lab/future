@@ -33,7 +33,7 @@ test('spawn should pass through returned Future', async (context) => {
 	})
 
 	await context.test('failed', async () => {
-		const a = Future.spawn(() => Future.failed(3))
+		const a = Future.spawn(() => Future.fail(3))
 
 		return a.catch((e) => equal(e, 3))
 	})

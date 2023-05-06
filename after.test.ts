@@ -22,9 +22,9 @@ test('after function will unwrap a FutureLike returned by a callback and preserv
 	})
 
 	await context.test('rejected value is changed', async () => {
-		const callback = context.mock.fn(() => Future.failed(10))
+		const callback = context.mock.fn(() => Future.fail(10))
 
-		const a = Future.after(Future.failed(1), callback)
+		const a = Future.after(Future.fail(1), callback)
 
 		return a.catch((n) => {
 			ok(callback.mock.callCount() === 1)
@@ -41,7 +41,7 @@ test('after function can accept the Future later and apply callback on it', asyn
 	ok(!Future.is(a))
 	ok(typeof a === 'function')
 
-	return a(Future.failed(1)).catch((n) => {
+	return a(Future.fail(1)).catch((n) => {
 		ok(callback.mock.callCount() === 1)
 		equal(n, 1)
 	})

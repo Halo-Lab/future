@@ -19,7 +19,7 @@ test('merge should accept variable amount of agruments', async () => {
 test('merge should reject if one of futures rejects', async () => {
 	const a = Future.merge(
 		Future.of(''),
-		Future.failed(2),
+		Future.fail(2),
 		Future.of([true])
 	)
 

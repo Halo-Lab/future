@@ -14,20 +14,20 @@ npm i @halo-lab/future
 
 ## API
 
-1. [Overview](usage)
-2. [`of`/`Future.of`](offutureof)
-3. [`failed`/`Future.failed`](failedfuturefailed)
-4. [`make`/`Future.make`](makefuturemake)
-5. [`spawn`/`Future.spawn`](spawnfuturespawn)
-6. [`isThenable`/`Future.is`](isthenablefutureis)
-7. [`merge`/`Future.merge`](mergefuturemerge)
-8. [`settle`/`Future.settle`](settlefuturesettle)
-9. [`first`/`Future.first`](firstfuturefirst)
-10. [`oneOf`/`Future.oneOf`](oneoffutureoneof)
-11. [`map`/`Future.map`](mapfuturemap)
-12. [`mapErr`/`Future.mapErr`](maperrfuturemaperr)
-13. [`recover`/`Future.recover`](recoverfuturerecover)
-14. [`after`/`Future.after`](afterfutureafter)
+1. [Overview](#usage)
+2. [`of`/`Future.of`](#offutureof)
+3. [`fail`/`Future.fail`](#failfuturefail)
+4. [`make`/`Future.make`](#makefuturemake)
+5. [`spawn`/`Future.spawn`](#spawnfuturespawn)
+6. [`isThenable`/`Future.is`](#isthenablefutureis)
+7. [`merge`/`Future.merge`](#mergefuturemerge)
+8. [`settle`/`Future.settle`](#settlefuturesettle)
+9. [`first`/`Future.first`](#firstfuturefirst)
+10. [`oneOf`/`Future.oneOf`](#oneoffutureoneof)
+11. [`map`/`Future.map`](#mapfuturemap)
+12. [`mapErr`/`Future.mapErr`](#maperrfuturemaperr)
+13. [`recover`/`Future.recover`](#recoverfuturerecover)
+14. [`after`/`Future.after`](#afterfutureafter)
 
 ## Usage
 
@@ -104,14 +104,14 @@ const fromPromise: Future.Self<string, unknown> = Future.of(Promise.resolve('foo
 const failedFuture: Future<never, string> = Future.of(Promise.reject('A very helpful message'));
 ```
 
-### `failed`/`Future.failed`
+### `fail`/`Future.fail`
 
 Wraps a value with a `Future` and immediately rejects it. If the value is another `Future`, it will be awaited and a new `Future` will be rejected with either value.
 
 ```typescript
-const failedFuture: Future.Self<never, 'error'> = Future.failed('error');
+const failedFuture: Future.Self<never, 'error'> = Future.fail('error');
 
-const failedPromise: Future.Self<never, number> = Future.failed(Promise.resolve(7));
+const failedPromise: Future.Self<never, number> = Future.fail(Promise.resolve(7));
 ```
 
 ### `make`/`Future.make`
@@ -196,7 +196,7 @@ const future: Future.Self<
     never
 > = Future.settle(
     Future.ok(1),
-    Future.failed('bar')
+    Future.fail('bar')
 );
 ```
 

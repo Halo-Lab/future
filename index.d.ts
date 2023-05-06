@@ -152,9 +152,9 @@ export function of<T, E>(value: FutureLike<T, E>): Future<T, E>
 export function of<T, E>(value: PromiseLike<T>): Future<T, E>
 export function of<const T>(value: T): Future<T, never>
 
-export function failed<T, E>(value: FutureLike<T, E>): Future<never, T | E>
-export function failed<T, E>(value: PromiseLike<T>): Future<never, T | E>
-export function failed<const E>(value: E): Future<never, E>
+export function fail<T, E>(value: FutureLike<T, E>): Future<never, T | E>
+export function fail<T, E>(value: PromiseLike<T>): Future<never, T | E>
+export function fail<const E>(value: E): Future<never, E>
 
 export function first<const P extends readonly unknown[]>(list: P): Future<MergeResolvedTypes<P>, MergeRejectedTypes<P>>
 export function first<T, E>(list: Iterable<T | FutureLike<T, E>> | ArrayLike<T | FutureLike<T, E>>): Future<T, E>
@@ -226,6 +226,7 @@ export function after<T, E, R>(promiseLike: PromiseLike<T>, callback: () => R): 
 type _of = typeof of
 type _is = typeof isThenable
 type _map = typeof map
+type _fail = typeof fail
 type _make = typeof make
 type _oneOf = typeof oneOf
 type _merge = typeof merge
@@ -234,7 +235,6 @@ type _first = typeof first
 type _after = typeof after
 type _mapErr = typeof mapErr
 type _settle = typeof settle
-type _failed = typeof failed
 type _recover = typeof recover
 
 declare namespace Future {
@@ -244,6 +244,7 @@ declare namespace Future {
   export const of: _of
   export const is: _is
   export const map: _map
+  export const fail: _fail
   export const make: _make
   export const oneOf: _oneOf
   export const merge: _merge
@@ -252,7 +253,6 @@ declare namespace Future {
   export const after: _after
   export const mapErr: _mapErr
   export const settle: _settle
-  export const failed: _failed
   export const recover: _recover
 }
 

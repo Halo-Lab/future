@@ -30,7 +30,7 @@
     "package.json"
   ],
   "scripts": {
-    "test": "tsd && node --loader ts-node/esm --test index.test.ts"
+    "test": "tsd && node --no-warnings --loader ts-node/esm --test index.test.ts"
   },
   "devDependencies": {
     "ts-node": "^10.9.1",
