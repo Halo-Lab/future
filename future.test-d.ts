@@ -189,3 +189,21 @@ expectType<Future.Self<string, EvalError>>(
 expectType<Future.Self<string, EvalError>>(
 	future.finally(() => 8)
 )
+
+// Expect the finally to inherit the error type of all FutureLikes if a callback
+// returns mixed types.
+expectType<Future.Self<string, EvalError | 'bar'>>(
+	future.finally(() => Math.random() ? 8 : Future.fail('bar'))
+)
+
+// Expect the finally to receive the unknown type as an error type if a callback
+// returns mixed types and at least one of them is PromiseLike.
+expectType<Future.Self<string, unknown>>(
+	future.finally(() => Math.random() ? 8 : Promise.resolve('bar'))
+)
+
+// User should be able to set error type manually if a callback
+// returns mixed types and at least one of them is PromiseLike.
+expectType<Future.Self<string, EvalError | string>>(
+	future.finally(() => Math.random() ? 8 : Promise.resolve('bar'))
+)

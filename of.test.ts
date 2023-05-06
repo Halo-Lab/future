@@ -5,6 +5,9 @@ import { expectType } from 'tsd'
 
 import Future from './index.js'
 
+// Expect the Future to have exact fulfilled type from the non-thenable value.
+expectType<Future.Self<5, never>>(Future.of(5))
+
 test('of function should wrap a non-Promise value into the Future (Promise)', () => {
   ok(Future.of(8) instanceof Promise)
 })
@@ -22,6 +25,3 @@ test('of function should pass through future', async (context) => {
     return a.catch((n) => equal(n, 1))
   })
 })
-
-// Expect of narrowing exact type for the non-thenable value.
-expectType<Future.Self<5, never>>(Future.of(5))
