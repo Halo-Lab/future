@@ -238,19 +238,108 @@ const future: Future.Self<1 | 'foo', readonly [string, boolean]> = Future.oneOf(
 
 ### `map`/`Future.map`
 
-Transforms a resolved value of the `Future` and returns another `Future`. It's a functional way to call _onfulfilled_ callback of `then` method.
+Transforms a resolved value of the `Future` and returns another `Future`. It's a functional way to call _onfulfilled_ callback of `then` method. The function has curried and uncurried forms.
+
+```typescript
+const future: Future.Self<1, never> = Future.of(1);
+
+const anotherFuture: Future.Self<number, never> = Future.map(
+    future,
+    (num) => num + 1
+);
+
+const multiplyByTen: <A>(future: Future.Like<number, A>) => Future.Self<number, A> =
+    Future.map((num) => num * 10);
+
+const multipliedFuture: Future.Self<number, never> = multiplyByTen(future);
+```
+
+> Callback is called only if the future is resolved. Otherwise it is returned as is.
 
 ### `mapErr`/`Future.mapErr`
 
-Transforms a rejected value of the `Future` into another rejected value and returns rejected `Future`.
+Transforms a rejected value of the `Future` into another rejected value and returns a rejected `Future`. The function has curried and uncurried forms.
+
+```typescript
+const future: Future.Self<never, 1> = Future.fail(1);
+
+const anotherFuture: Future.Self<never, number> = Future.mapErr(
+    future,
+    (num) => num + 1
+);
+
+const multiplyByTen: <A>(future: Future.Like<A, number>) => Future.Self<A, number> =
+    Future.mapErr((num) => num * 10);
+
+const multipliedFuture: Future.Self<never, number> = multiplyByTen(future);
+```
+
+> Callback is called only if the future is rejected. Otherwise it is returned as is.
 
 ### `recover`/`Future.recover`
 
-Transforms a rejected value of the `Future` into a fulfileld value and returns another `Future`. It's a functional way to call _onrejected_ callback of the `then` method.
+Transforms a rejected value of the `Future` into a resolved value and returns another `Future`. It's a functional way to call _onrejected_ callback of the `then` method or the `catch` method. The function has curried and uncurried forms.
+
+```typescript
+const future: Future.Self<OkResponse, ErrResponse> =
+    fetch('/api/v3/endpoint')
+        .then((response) =>
+            response.ok ? response.json() : Future.fail(response.json())
+        );
+
+// 1.
+const futureWithDefaultResponse: Future.Self<OkResponse, never> =
+    Future.recover(
+        future,
+        (errResponse) => createDefaultResponseFrom(errResponse)
+    );
+// 2.
+const repairResponse: (future: Future.Like<OkResponse, ErrResponse>) => Future.Self<OkResponse, never> =
+    Future.recover(
+        (errResponse) => createDefaultResponseFrom(errResponse)
+    );
+
+const repairedResponse: Future.Self<OkResponse, never> = repairResponse(future);
+```
+
+> Callback is called only if the future is rejected. Otherwise it is returned as is.
 
 ### `after`/`Future.after`
 
-Registers a callback to be called after the `Future` resolves either way. It's a functional way to call the `finally` method.
+Registers a callback to be called after the `Future` fulfills either way. It's a functional way to call the `finally` method. The function has curried and uncurried forms.
+
+```typescript
+const future: Future.Self<OkResponse, ErrResponse> =
+    fetch('/api/v3/endpoint')
+        .then((response) =>
+            response.ok ? response.json() : Future.fail(response.json())
+        );
+
+// 1.
+const sameFuture: Future.Self<OkResponse, ErrResponse> =
+    Future.after(
+        future,
+        () => doSomeSideEffect()
+    );
+// 2.
+const cleanupAfterJob: <OkResponse, ErrResponse>(
+    future: Future.Like<OkResponse, ErrResponse>
+) => Future.Self<OkResponse, ErrResponse> =
+    Future.after(() => doSomeCleanup());
+
+const sameFutureAfterCleanup: Future.Self<OkResponse, ErrResponse> =
+    cleanupAfterJob(future);
+```
+
+If a callback throws an error or returns a rejected `Future` the error is propagated into the resulting `Future`.
+
+```typescript
+const future: Future.Self<never, string | boolean> =
+    Future.after(
+        Future.fail('foo'),
+        () => Future.fail(false)
+    );
+```
 
 ## Word from author
 
