@@ -1,8 +1,8 @@
-import { expectAssignable, expectNotAssignable, expectType } from "tsd"
+import { expectAssignable, expectNotAssignable, expectType } from 'tsd'
 
-import Future from "./index.js"
+import Future from './index.js'
 
-const futureLike: Future.Like<string, TypeError> = Promise.resolve("")
+const futureLike: Future.Like<string, TypeError> = Promise.resolve('')
 
 const promiseLike: PromiseLike<number> = Promise.resolve(8)
 
@@ -33,43 +33,42 @@ expectType<Future.Like<number, TypeError>>(futureLike.then(() => 8))
 
 // If the onrejected callback returns a non-PromiseLike value, inferred
 // error value should be "never".
-expectType<Future.Like<string, never>>(futureLike.then(null, () => ""))
+expectType<Future.Like<string, never>>(futureLike.then(null, () => ''))
 
 // The onrejected callback is allowed to return a different fulfilled
 // value from which the main FutureLike holds. The final type will be
 // the union of the new type and the futureLike's fulfilled type.
-expectType<Future.Like<string | number, never>>(
-	futureLike.then(null, () => 4)
-)
+expectType<Future.Like<string | number, never>>(futureLike.then(null, () => 4))
 
 // then method is allowed to return different values from onfulfilled
 // and onrejected callbacks simultaneously.
 expectType<Future.Like<boolean | string[], never>>(
 	futureLike.then(
 		() => false,
-		() => [""]
-	)
+		() => [''],
+	),
 )
 
 {
-	const futureLike2: Future.Like<{ readonly foo: string }, number> = Promise.resolve({ foo: '' })
+	const futureLike2: Future.Like<{ readonly foo: string }, number> =
+		Promise.resolve({ foo: '' })
 
 	// If onresolved callback returns another FutureLike, the resulting FutureLike inherits both
 	// error types and resolved type is changed to the one which is carried by a type returned by
 	// onresolved callback.
 	expectType<Future.Like<{ readonly foo: string }, number | TypeError>>(
-		futureLike.then((_value) => futureLike2)
+		futureLike.then((_value) => futureLike2),
 	)
 }
 
 // If onresolved callback returns PromiseLike, the error type of the resulting FutureLike
 // should be inferred as unknown.
 expectType<Future.Like<boolean, unknown>>(
-	futureLike.then((value) => Promise.resolve(value === 'true'))
+	futureLike.then((value) => Promise.resolve(value === 'true')),
 )
 
 // If onrejected callback returns PromiseLike, the error type of the resulting FutureLike
 // should be inferred as unknown and resolved types should be combined.
 expectType<Future.Like<string | boolean, unknown>>(
-	futureLike.then(null, (value) => Promise.resolve(value.name === 'TypeError'))
+	futureLike.then(null, (value) => Promise.resolve(value.name === 'TypeError')),
 )

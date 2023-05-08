@@ -13,7 +13,13 @@ test('is function should return true for', async (context) => {
 	})
 
 	await context.test('thenable', () => {
-		ok(Future.is({ then(f: (value: boolean) => void) { f(false) } }))
+		ok(
+			Future.is({
+				then(f: (value: boolean) => void) {
+					f(false)
+				},
+			}),
+		)
 	})
 })
 

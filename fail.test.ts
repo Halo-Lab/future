@@ -11,7 +11,7 @@ import Future from './index.js'
 	// Expect the fail function to infer exact type of the non-thenable value.
 	expectType<Future.Self<never, 'error'>>(a)
 
-	a.catch(() => { })
+	a.catch(() => {})
 }
 
 {
@@ -20,7 +20,7 @@ import Future from './index.js'
 	// Expect the Future to receive the Right type of the FutureLike argument as the Left type.
 	expectType<Future.Self<never, 1>>(a)
 
-	a.catch(() => { })
+	a.catch(() => {})
 }
 
 {
@@ -29,7 +29,7 @@ import Future from './index.js'
 	// Expect the Future to receive the Left type of the FutureLike argument as the Left type.
 	expectType<Future.Self<never, 1>>(a)
 
-	a.catch(() => { })
+	a.catch(() => {})
 }
 
 {
@@ -39,7 +39,7 @@ import Future from './index.js'
 	expectType<Future.Self<never, unknown>>(a)
 	expectNotType<Future.Self<never, number>>(a)
 
-	a.catch(() => { })
+	a.catch(() => {})
 }
 
 {
@@ -48,7 +48,7 @@ import Future from './index.js'
 	// Expect the Left type to be configurable if an argument is the resolved PromiseLike.
 	expectType<Future.Self<never, number | string>>(a)
 
-	a.catch(() => { })
+	a.catch(() => {})
 }
 
 {
@@ -57,7 +57,7 @@ import Future from './index.js'
 	// Expect the Future to receive the Left type as unknown if the rejected PromiseLike is an argument.
 	expectType<Future.Self<never, unknown>>(a)
 
-	a.catch(() => { })
+	a.catch(() => {})
 }
 
 {
@@ -66,7 +66,7 @@ import Future from './index.js'
 	// Expect the Left type to be configurable if an argument is the rejected PromiseLike.
 	expectType<Future.Self<never, number | string>>(a)
 
-	a.catch(() => { })
+	a.catch(() => {})
 }
 
 test('fail function should wrap a non-Promise value into the Future (Promise)', async () => {
@@ -74,7 +74,7 @@ test('fail function should wrap a non-Promise value into the Future (Promise)', 
 
 	ok(a instanceof Promise)
 
-	return a.catch(() => { })
+	return a.catch(() => {})
 })
 
 test('fail function should fail future with a value', async () => {

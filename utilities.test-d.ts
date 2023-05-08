@@ -19,12 +19,12 @@ expectType<string>(rightFromValue)
 
 declare const leftFromFuture: Future.Left<Future.Self<number, boolean>>
 
-// Left type unwaps the Future and gets the error value type. 
+// Left type unwaps the Future and gets the error value type.
 expectType<boolean>(leftFromFuture)
 
 declare const leftFromValue: Future.Left<[number]>
 
-// Left type should return never for the non-thenable type. 
+// Left type should return never for the non-thenable type.
 expectType<never>(leftFromValue)
 
 declare const leftFromPromise: Future.Left<Promise<'hello'>>

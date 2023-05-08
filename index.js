@@ -55,26 +55,26 @@ export function oneOf(...futureLikes) {
 		const errors = []
 		let settledErrorsAmount = 0
 
-		Array.from(flatFutureLikes(futureLikes))
-			.forEach(
-				(futureLike, index, list) => of(futureLike).then(
-					ok,
-					(error) => {
-						errors[index] = error
-						settledErrorsAmount += 1
+		Array.from(flatFutureLikes(futureLikes)).forEach(
+			(futureLike, index, list) =>
+				of(futureLike).then(ok, (error) => {
+					errors[index] = error
+					settledErrorsAmount += 1
 
-						settledErrorsAmount === list.length && err(errors)
-					}
-				)
-			)
+					settledErrorsAmount === list.length && err(errors)
+				}),
+		)
 	})
 }
 
 export function settle(...futureLikes) {
 	return Promise.all(
-		Array.from(flatFutureLikes(futureLikes)).map(
-			(like) => of(like).then((ok) => ({ ok }), (err) => ({ err }))
-		)
+		Array.from(flatFutureLikes(futureLikes)).map((like) =>
+			of(like).then(
+				(ok) => ({ ok }),
+				(err) => ({ err }),
+			),
+		),
 	)
 }
 
@@ -100,9 +100,9 @@ export function after(futureLike, callback) {
 	return isFunction(futureLike)
 		? (actualFutureLike) => after(actualFutureLike, futureLike)
 		: futureLike.then(
-			(value) => of(callback()).then(() => value),
-			(error) => of(callback()).then(() => fail(error))
-		)
+				(value) => of(callback()).then(() => value),
+				(error) => of(callback()).then(() => fail(error)),
+		  )
 }
 
 export default {
@@ -120,4 +120,3 @@ export default {
 	settle,
 	recover,
 }
-
