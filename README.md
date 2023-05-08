@@ -38,10 +38,10 @@ This package defines `Future`/`FutureLike` types which you can use instead of th
 import { Future } from '@halo-lab/future'
 
 const future: Future<number, Error> = new Promise((resolve, reject) => {
-	const randomNumber = Math.random()
+  const randomNumber = Math.random()
 
-	if (randomNumber > 0.5) resolve(randomNumber)
-	else reject(new Error('Random number is less than 0.5'))
+  if (randomNumber > 0.5) resolve(randomNumber)
+  else reject(new Error('Random number is less than 0.5'))
 })
 
 const promise: Promise<number> = future
@@ -52,14 +52,14 @@ By using the `Future` you can describe what errors a promise can be rejected wit
 ```typescript
 // using the example above
 const newFuture: Future<string[], never> = future.then(
-	(number) => {
-		/* do something useful */
-		return ['foo'] /* some result */
-	},
-	(error /* Error */) => {
-		/* report that there is a problem and fix it */
-		return []
-	},
+  (number) => {
+    /* do something useful */
+    return ['foo'] /* some result */
+  },
+  (error /* Error */) => {
+    /* report that there is a problem and fix it */
+    return []
+  },
 )
 ```
 
@@ -67,9 +67,9 @@ const newFuture: Future<string[], never> = future.then(
 >
 > ```typescript
 > try {
-> 	const value: string[] = await newFuture
+>   const value: string[] = await newFuture
 > } catch (error) {
-> 	/* error is not typed as never but any or unknown depending on your tsconfig */
+>   /* error is not typed as never but any or unknown depending on your tsconfig */
 > }
 > ```
 
@@ -83,7 +83,7 @@ The `Future` namespace defines also aliases for the `Future` type: `Self` and fo
 import Future from '@halo-lab/future'
 
 function one(): Future.Self<1, never> {
-	return Future.of(1)
+  return Future.of(1)
 }
 
 const numberOne: Future.Like<1, never> = one()
@@ -127,13 +127,13 @@ const duplicatedWrappedNumber: Future.Self<10, never> = Future.of(wrappedNumber)
 // error type because it is really unknown unless the user knows it
 // and provides the type manually.
 const fromPromise: Future.Self<string, unknown> = Future.of(
-	Promise.resolve('foo'),
+  Promise.resolve('foo'),
 )
 
 // If the value is rejected Future or Promise, the resulting Future
 // also has the rejected state.
 const failedFuture: Future<never, string> = Future.of(
-	Promise.reject('A very helpful message'),
+  Promise.reject('A very helpful message'),
 )
 ```
 
@@ -145,7 +145,7 @@ Wraps a value with a `Future` and immediately rejects it. If the value is anothe
 const failedFuture: Future.Self<never, 'error'> = Future.fail('error')
 
 const failedPromise: Future.Self<never, number> = Future.fail(
-	Promise.resolve(7),
+  Promise.resolve(7),
 )
 ```
 
@@ -155,7 +155,7 @@ Creates a `Future` with an _executor_ callback. The same as the `Promise` constr
 
 ```typescript
 const future: Future<number, string> = Future.make((ok, err) => {
-	doAsyncJob((error, result) => (error ? err(error) : ok(result)))
+  doAsyncJob((error, result) => (error ? err(error) : ok(result)))
 })
 ```
 
@@ -165,18 +165,18 @@ Creates a `Future` from a _callback's_ result. If the callback throws an error, 
 
 ```typescript
 function calculateFibonacciNumber(position: number): number {
-	// ...
+  // ...
 }
 
 const future: Future.Self<number, never> = Future.spawn(() => {
-	return calculateFibonacciNumber(57)
+  return calculateFibonacciNumber(57)
 })
 
 // There is no way to mark a function in TypeScript that can
 // throw an error, so you have to describe the error type that
 // manually. Otherwise, it will be `never`.
 const trickyFuture: Future.Self<never, Error> = Future.spawn(() => {
-	throw new Error('an error is thrown')
+  throw new Error('an error is thrown')
 })
 ```
 
@@ -184,10 +184,10 @@ You can pass arguments into the callback by providing them after it.
 
 ```typescript
 const future: Future.Self<number, never> = Future.spawn(
-	(first, second) => {
-		return first + second
-	},
-	[34, 97],
+  (first, second) => {
+    return first + second
+  },
+  [34, 97],
 )
 ```
 
@@ -199,9 +199,9 @@ Checks if a value is a [thenable](https://developer.mozilla.org/en-US/docs/Web/J
 Future.is(Future.of(1)) // -> true
 Future.is(Promise.resolve('foo')) // -> true
 Future.is({
-	then(fulfill) {
-		return Future.of(fulfill(Math.random()))
-	},
+  then(fulfill) {
+    return Future.of(fulfill(Math.random()))
+  },
 }) // -> true
 Future.is(3) // -> false
 ```
@@ -212,14 +212,14 @@ Combines multiple `Future`s together waiting for all to complete or first to rej
 
 ```typescript
 const result: Future.Self<readonly [number, string], boolean | string> =
-	Future.merge(
-		Future.spawn<number, boolean>(() => mayThrowABoolean()),
-		Future.spawn<string, string>(() => mayThrowAString()),
-	)
+  Future.merge(
+    Future.spawn<number, boolean>(() => mayThrowABoolean()),
+    Future.spawn<string, string>(() => mayThrowAString()),
+  )
 
 const combined: Future.Self<readonly [1, 2], never> = Future.merge([
-	Future.of(1),
-	Future.of(2),
+  Future.of(1),
+  Future.of(2),
 ])
 ```
 
@@ -229,8 +229,8 @@ Combines multiple `Future`s together waiting for all to complete. Behaves as the
 
 ```typescript
 const future: Future.Self<
-	readonly [Result<1, never>, Result<never, 'bar'>],
-	never
+  readonly [Result<1, never>, Result<never, 'bar'>],
+  never
 > = Future.settle(Future.ok(1), Future.fail('bar'))
 ```
 
@@ -240,19 +240,19 @@ Waits for the first `Future` to fulfill either successfuly or as a failure. Beha
 
 ```typescript
 const future: Future.Self<1 | 'foo', string | boolean> = Future.first(
-	Future.make<1, string>(
-		(ok, err) =>
-			setTimeout(() => {
-				Math.random() > 0.5
-					? ok(1)
-					: err('numbers greater than 0.5 are not acceptable')
-			}),
-		100,
-	),
-	Future.spawn<'foo', boolean>(() => {
-		if (Math.random() > 0.5) return 'foo'
-		else throw true
-	}),
+  Future.make<1, string>(
+    (ok, err) =>
+      setTimeout(() => {
+        Math.random() > 0.5
+          ? ok(1)
+          : err('numbers greater than 0.5 are not acceptable')
+      }),
+    100,
+  ),
+  Future.spawn<'foo', boolean>(() => {
+    if (Math.random() > 0.5) return 'foo'
+    else throw true
+  }),
 )
 ```
 
@@ -262,19 +262,19 @@ Waits for the first `Future` to fulfill or all `Future`s to reject (array of err
 
 ```typescript
 const future: Future.Self<1 | 'foo', readonly [string, boolean]> = Future.oneOf(
-	Future.make<1, string>(
-		(ok, err) =>
-			setTimeout(() => {
-				Math.random() > 0.5
-					? ok(1)
-					: err('numbers greater than 0.5 are not acceptable')
-			}),
-		100,
-	),
-	Future.spawn<'foo', boolean>(() => {
-		if (Math.random() > 0.5) return 'foo'
-		else throw true
-	}),
+  Future.make<1, string>(
+    (ok, err) =>
+      setTimeout(() => {
+        Math.random() > 0.5
+          ? ok(1)
+          : err('numbers greater than 0.5 are not acceptable')
+      }),
+    100,
+  ),
+  Future.spawn<'foo', boolean>(() => {
+    if (Math.random() > 0.5) return 'foo'
+    else throw true
+  }),
 )
 ```
 
@@ -286,12 +286,12 @@ Transforms a resolved value of the `Future` and returns another `Future`. It's a
 const future: Future.Self<1, never> = Future.of(1)
 
 const anotherFuture: Future.Self<number, never> = Future.map(
-	future,
-	(num) => num + 1,
+  future,
+  (num) => num + 1,
 )
 
 const multiplyByTen: <A>(
-	future: Future.Like<number, A>,
+  future: Future.Like<number, A>,
 ) => Future.Self<number, A> = Future.map((num) => num * 10)
 
 const multipliedFuture: Future.Self<number, never> = multiplyByTen(future)
@@ -307,12 +307,12 @@ Transforms a rejected value of the `Future` into another rejected value and retu
 const future: Future.Self<never, 1> = Future.fail(1)
 
 const anotherFuture: Future.Self<never, number> = Future.mapErr(
-	future,
-	(num) => num + 1,
+  future,
+  (num) => num + 1,
 )
 
 const multiplyByTen: <A>(
-	future: Future.Like<A, number>,
+  future: Future.Like<A, number>,
 ) => Future.Self<A, number> = Future.mapErr((num) => num * 10)
 
 const multipliedFuture: Future.Self<never, number> = multiplyByTen(future)
@@ -326,21 +326,21 @@ Transforms a rejected value of the `Future` into a resolved value and returns an
 
 ```typescript
 const future: Future.Self<OkResponse, ErrResponse> = fetch(
-	'/api/v3/endpoint',
+  '/api/v3/endpoint',
 ).then((response) =>
-	response.ok ? response.json() : Future.fail(response.json()),
+  response.ok ? response.json() : Future.fail(response.json()),
 )
 
 // 1.
 const futureWithDefaultResponse: Future.Self<OkResponse, never> =
-	Future.recover(future, (errResponse) =>
-		createDefaultResponseFrom(errResponse),
-	)
+  Future.recover(future, (errResponse) =>
+    createDefaultResponseFrom(errResponse),
+  )
 // 2.
 const repairResponse: (
-	future: Future.Like<OkResponse, ErrResponse>,
+  future: Future.Like<OkResponse, ErrResponse>,
 ) => Future.Self<OkResponse, never> = Future.recover((errResponse) =>
-	createDefaultResponseFrom(errResponse),
+  createDefaultResponseFrom(errResponse),
 )
 
 const repairedResponse: Future.Self<OkResponse, never> = repairResponse(future)
@@ -354,31 +354,31 @@ Registers a callback to be called after the `Future` fulfills either way. It's a
 
 ```typescript
 const future: Future.Self<OkResponse, ErrResponse> = fetch(
-	'/api/v3/endpoint',
+  '/api/v3/endpoint',
 ).then((response) =>
-	response.ok ? response.json() : Future.fail(response.json()),
+  response.ok ? response.json() : Future.fail(response.json()),
 )
 
 // 1.
 const sameFuture: Future.Self<OkResponse, ErrResponse> = Future.after(
-	future,
-	() => doSomeSideEffect(),
+  future,
+  () => doSomeSideEffect(),
 )
 // 2.
 const cleanupAfterJob: <OkResponse, ErrResponse>(
-	future: Future.Like<OkResponse, ErrResponse>,
+  future: Future.Like<OkResponse, ErrResponse>,
 ) => Future.Self<OkResponse, ErrResponse> = Future.after(() => doSomeCleanup())
 
 const sameFutureAfterCleanup: Future.Self<OkResponse, ErrResponse> =
-	cleanupAfterJob(future)
+  cleanupAfterJob(future)
 ```
 
 If a callback throws an error or returns a rejected `Future` the error is propagated into the resulting `Future`.
 
 ```typescript
 const future: Future.Self<never, string | boolean> = Future.after(
-	Future.fail('foo'),
-	() => Future.fail(false),
+  Future.fail('foo'),
+  () => Future.fail(false),
 )
 ```
 
