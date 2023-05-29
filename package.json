@@ -1,39 +1,39 @@
 {
-	"name": "@halo-lab/future",
-	"type": "module",
-	"author": "Kapelianovych Yevhen",
-	"version": "0.0.5",
-	"license": "ISC",
-	"description": "A better Promise",
-	"repository": {
-		"url": "https://github.com/Halo-Lab/future",
-		"type": "git"
-	},
-	"keywords": [
-		"Future",
-		"Promise",
-		"FutureLike",
-		"TypeScript",
-		"PromiseLike"
-	],
-	"exports": {
-		".": {
-			"types": "./index.d.ts",
-			"default": "./index.js"
-		}
-	},
-	"files": [
-		"LICENSE",
-		"README.md",
-		"index.d.ts",
-		"index.js",
-		"package.json"
-	],
-	"scripts": {
-		"test": "tsd && node --no-warnings --loader ts-node/esm --test index.test.ts"
-	},
-	"devDependencies": {
-		"ts-node": "^10.9.1",
-		"tsd": "^0.28.0"
-	}
+  "name": "@halo-lab/future",
+  "type": "module",
+  "author": "Kapelianovych Yevhen",
+  "version": "0.0.5",
+  "license": "ISC",
+  "description": "A better Promise",
+  "repository": {
+    "url": "https://github.com/Halo-Lab/future",
+    "type": "git"
+  },
+  "keywords": [
+    "Future",
+    "Promise",
+    "FutureLike",
+    "TypeScript",
+    "PromiseLike"
+  ],
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./index.js"
+    }
+  },
+  "files": [
+    "LICENSE",
+    "README.md",
+    "index.d.ts",
+    "index.js",
+    "package.json"
+  ],
+  "scripts": {
+    "test": "tsd && node --no-warnings --loader ts-node/esm --test index.test.ts"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.1",
+    "tsd": "^0.28.0"
+  }
 }
