@@ -69,8 +69,14 @@ import Future from "./index.js";
   a.catch(() => {});
 }
 
-// Invokation of the fail function without any argument creates an empty rejected Future.
-expectType<Future.Self<never, void>>(Future.fail());
+{
+  const a = Future.fail();
+
+  // Invokation of the fail function without any argument creates an empty rejected Future.
+  expectType<Future.Self<never, void>>(a);
+
+  a.catch(() => {});
+}
 
 test("fail function should wrap a non-Promise value into the Future (Promise)", async () => {
   const a = Future.fail(8);
