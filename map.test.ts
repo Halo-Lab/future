@@ -7,17 +7,38 @@ import Future from "./index.js";
 
 // The returned Future should inherit the Right and Left types from the FutureLike returned from a callback.
 expectType<
-  (futureLike: Future.Like<string, never>) => Future.Self<boolean, never>
+  <K = never>(futureLike: Future.Like<string, K>) => Future.Self<boolean, K>
 >(Future.map((value: string) => Future.of(value === "foo")));
 
-// The returned Future should inherit the Right type from the PromiseLike returned from a callback and the Left type as unknown by default.
-expectType<(futureLike: PromiseLike<string>) => Future.Self<boolean, unknown>>(
-  Future.map((value: string) => Promise.resolve(value === "foo"))
+// If error types are different, they have to be united.
+expectType<
+  (
+    futureLike: Future.Like<number, { foo: string }>
+  ) => Future.Self<string, Error | { foo: string }>
+>(
+  Future.map((value: number) =>
+    Future.make<string, Error>((ok, err) =>
+      Math.random() ? ok(String(value)) : err(new Error())
+    )
+  )<{ foo: string }>
 );
 
+// The returned Future should inherit the Right type from the PromiseLike returned from a callback and the Left type as unknown by default.
+expectType<
+  <K = unknown>(
+    futureLike: PromiseLike<string>
+  ) => Future.Self<boolean, unknown>
+>(Future.map((value: string) => Promise.resolve(value === "foo")));
+
 // User should be able to type the Left type manually if callback returns the PromiseLike.
-expectType<(futureLike: PromiseLike<string>) => Future.Self<boolean, string>>(
-  Future.map((value: string) => Promise.resolve(value === "foo"))
+expectType<
+  <K = string>(
+    promiseLike: PromiseLike<string>
+  ) => Future.Self<boolean, string | K>
+>(
+  Future.map<string, boolean, string>((value: string) =>
+    Promise.resolve(value === "foo")
+  )
 );
 
 // If a callback returns non-thenable value, the returned FutureLike or PromiseLike accepts any Left type.

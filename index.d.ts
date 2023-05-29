@@ -268,23 +268,23 @@ export function settle<const P extends readonly unknown[]>(
   ...list: P
 ): Future<CollectBoth<P>, never>;
 
-export function map<T, E, R>(
+export function map<T, R, E>(
   callback: (value: T) => FutureLike<R, E>
-): (futureLike: FutureLike<T, E>) => Future<R, E>;
-export function map<T, E, R>(
+): <K = E>(futureLike: FutureLike<T, K>) => Future<R, E | K>;
+export function map<T, R, E>(
   callback: (value: T) => PromiseLike<R>
-): (promiseLike: PromiseLike<T>) => Future<R, E>;
+): <K = E>(promiseLike: PromiseLike<T>) => Future<R, E | K>;
 export function map<T, R>(
   callback: (value: T) => NonThenable<R>
 ): <E>(futureLike: FutureLike<T, E>) => Future<R, E>;
 export function map<T, R, K extends AwaitedError<R> = AwaitedError<R>>(
   callback: (value: T) => R
 ): <E>(futureLike: FutureLike<T, E>) => Future<Awaited<R>, E | K>;
-export function map<T, E, R, K>(
+export function map<T, E, R, K = E>(
   futureLike: FutureLike<T, E>,
   callback: (value: T) => FutureLike<R, K>
 ): Future<R, E | K>;
-export function map<T, E, R, K>(
+export function map<T, E, R, K = E>(
   promiseLike: PromiseLike<T>,
   callback: (value: T) => PromiseLike<R>
 ): Future<R, E | K>;
