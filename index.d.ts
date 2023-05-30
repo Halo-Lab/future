@@ -397,10 +397,10 @@ export function recover<
 
 export function after<T, E>(
   callback: () => FutureLike<T, E>
-): <A, K>(futureLike: FutureLike<A, K>) => Future<T, E | K>;
+): <A, K>(futureLike: FutureLike<A, K>) => Future<A, E | K>;
 export function after<T, E>(
   callback: () => PromiseLike<T>
-): <A, K>(promiseLike: PromiseLike<A>) => Future<T, E | K>;
+): <A, K>(promiseLike: PromiseLike<A>) => Future<A, E | K>;
 export function after<R>(
   callback: () => NonThenable<R>
 ): <T, E>(futureLike: FutureLike<T, E>) => Future<T, E>;
