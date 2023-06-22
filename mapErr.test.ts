@@ -18,10 +18,10 @@ expectType<
     Future.of<number, string>(Promise.resolve(value))
   )
 );
-expectType<<T>(futureLike: Future.Like<T, number>) => Future.Self<T, unknown>>(
+expectType<<T>(promiseLike: PromiseLike<T>) => Future.Self<T, unknown>>(
   Future.mapErr((value: number) => Promise.resolve(value))
 );
-expectType<Future.Self<boolean, unknown>>(
+expectType<Future.Self<false, unknown>>(
   Future.mapErr(Future.of(false), (value: number) => Promise.resolve(value))
 );
 expectType<Future.Self<boolean, unknown>>(

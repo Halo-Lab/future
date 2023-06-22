@@ -29,6 +29,7 @@ npm i @halo-lab/future
 13. [`mapErr`/`Future.mapErr`](#maperrfuturemaperr)
 14. [`recover`/`Future.recover`](#recoverfuturerecover)
 15. [`after`/`Future.after`](#afterfutureafter)
+16. [`apply`/`Future.apply`](#applyfutureapply)
 
 ## Usage
 
@@ -382,6 +383,27 @@ const future: Future.Self<never, string | boolean> = Future.after(
   () => Future.fail(false)
 );
 ```
+
+### `apply`/`Future.apply`
+
+Transforms a resolved value of the `Future` and returns another `Future`. It's a functional way to call _onfulfilled_ callback of `then` method. The function has curried and uncurried forms. It's acts the same as the [`map`](#mapfuturemap) function with a distinction that the _callback_ parameter has to be wrapped with another `FutureLike`.
+
+```typescript
+const future: Future.Self<1, never> = Future.of(1);
+
+const anotherFuture: Future.Self<number, never> = Future.apply(
+  future,
+  Future.of((num) => num + 1)
+);
+
+const multiplyByTen: <A>(
+  future: Future.Like<number, A>
+) => Future.Self<number, A> = Future.apply(Future.of((num) => num * 10));
+
+const multipliedFuture: Future.Self<number, never> = multiplyByTen(future);
+```
+
+> Callback is called only if both futures are resolved.
 
 ## Word from author
 

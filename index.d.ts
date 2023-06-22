@@ -436,11 +436,67 @@ export function after<T, E, R, K extends AwaitedError<R> = AwaitedError<R>>(
   callback: () => R
 ): Future<T, E | K>;
 
+export function apply<T, R, E, O = E>(
+  futureLike: FutureLike<(value: T) => FutureLike<R, E>, O>
+): <K = E>(futureLike: FutureLike<T, K>) => Future<R, E | K | O>;
+export function apply<T, R, E, O = E>(
+  promiseLike: PromiseLike<(value: T) => PromiseLike<R>>
+): <K = E>(promiseLike: PromiseLike<T>) => Future<R, E | K | O>;
+export function apply<T, R, P>(
+  futureLike: FutureLike<(value: T) => NonThenable<R>, P>
+): <E = P>(futureLike: FutureLike<T, E>) => Future<R, E | P>;
+export function apply<T, R, P>(
+  promiseLike: PromiseLike<(value: T) => NonThenable<R>>
+): <E = P>(promiseLike: PromiseLike<T>) => Future<R, E | P>;
+export function apply<T, R, B, K extends AwaitedError<R> = AwaitedError<R>>(
+  futureLike: FutureLike<(value: T) => R, B>
+): <E = B>(futureLike: FutureLike<T, E>) => Future<Awaited<R>, E | K | B>;
+export function apply<T, R, B, K extends AwaitedError<R> = AwaitedError<R>>(
+  promiseLike: PromiseLike<(value: T) => R>
+): <E = B>(promiseLike: PromiseLike<T>) => Future<Awaited<R>, E | K | B>;
+export function apply<T, E, R, K = E, D = E>(
+  futureLike: FutureLike<T, E>,
+  futureLikeWithCallback: FutureLike<(value: T) => FutureLike<R, K>, D>
+): Future<R, E | K | D>;
+export function apply<T, E, R, K = E, D = E>(
+  promiseLike: PromiseLike<T>,
+  promiseLikeWithCallback: PromiseLike<(value: T) => FutureLike<R, K>>
+): Future<R, E | K | D>;
+export function apply<T, E, R, K = E>(
+  futureLike: FutureLike<T, E>,
+  futureLikeWithCallback: FutureLike<(value: T) => NonThenable<R>, K>
+): Future<R, E | K>;
+export function apply<T, E, R, K = E>(
+  promiseLike: PromiseLike<T>,
+  promiseLikeWithCallback: PromiseLike<(value: T) => NonThenable<R>>
+): Future<R, E | K>;
+export function apply<
+  T,
+  E,
+  R,
+  B = E,
+  K extends AwaitedError<R> = AwaitedError<R>
+>(
+  futureLike: FutureLike<T, E>,
+  futureLikeWithCallback: FutureLike<(value: T) => R, B>
+): Future<Awaited<R>, E | B | K>;
+export function apply<
+  T,
+  E,
+  R,
+  B = E,
+  K extends AwaitedError<R> = AwaitedError<R>
+>(
+  promiseLike: PromiseLike<T>,
+  promiseLikeWithCallback: PromiseLike<(value: T) => R>
+): Future<Awaited<R>, E | B | K>;
+
 type _of = typeof of;
 type _is = typeof isThenable;
 type _map = typeof map;
 type _fail = typeof fail;
 type _make = typeof make;
+type _apply = typeof apply;
 type _oneOf = typeof oneOf;
 type _merge = typeof merge;
 type _spawn = typeof spawn;
@@ -463,6 +519,7 @@ declare namespace Future {
   export const map: _map;
   export const fail: _fail;
   export const make: _make;
+  export const apply: _apply;
   export const oneOf: _oneOf;
   export const merge: _merge;
   export const spawn: _spawn;

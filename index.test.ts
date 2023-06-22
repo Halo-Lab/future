@@ -4,6 +4,7 @@ import "./map.test.js";
 import "./fail.test.js";
 import "./make.test.js";
 import "./after.test.js";
+import "./apply.test.js";
 import "./merge.test.js";
 import "./first.test.js";
 import "./oneOf.test.js";

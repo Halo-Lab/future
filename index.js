@@ -105,6 +105,15 @@ export function after(futureLike, callback) {
       );
 }
 
+export function apply(futureLikeWithValue, futureLikeWithFunction) {
+  return futureLikeWithFunction
+    ? map(merge(futureLikeWithValue, futureLikeWithFunction), ([value, fn]) =>
+        fn(value)
+      )
+    : (anotherFutureLikeWithValue) =>
+        apply(anotherFutureLikeWithValue, futureLikeWithValue);
+}
+
 export default {
   of,
   is: isThenable,
@@ -116,6 +125,7 @@ export default {
   spawn,
   first,
   after,
+  apply,
   mapErr,
   settle,
   recover,
