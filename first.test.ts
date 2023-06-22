@@ -1,5 +1,5 @@
 import test from "node:test";
-import { equal } from "node:assert/strict";
+import { ok, equal } from "node:assert/strict";
 
 import Future from "./index.js";
 
@@ -27,4 +27,22 @@ test("a single array argument should be treated as a list of futures for the fir
   const a = Future.first([Future.of(4), Future.of(3), Future.fail("foo")]);
 
   return a.then((n) => equal(n, 4));
+});
+
+test("should treat an arrayLike as non-iterable value", async (t) => {
+  const a = Future.first({
+    0: Future.of(""),
+    1: Future.of(2),
+    2: Future.of([true]),
+    length: 3,
+  });
+
+  return a.then((result) => {
+    equal(typeof result, "object");
+    ok("length" in result);
+    equal(result.length, 3);
+    ok(Future.is(result[0]));
+    ok(Future.is(result[1]));
+    ok(Future.is(result[2]));
+  });
 });

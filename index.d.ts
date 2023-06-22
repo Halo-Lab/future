@@ -1,3 +1,9 @@
+type IsNever<V> = [V] extends [never] ? true : false;
+
+type If<Condition extends boolean, Then, Else> = Condition extends true
+  ? Then
+  : Else;
+
 /**
  * A type-only symbol that will hold a fulfilled type to strictly catch
  * unassignable types when TypScript cannot differentiate it based on the
@@ -160,16 +166,16 @@ export function merge<const P extends readonly unknown[]>(
   list: P
 ): Future<CollectResolvedTypes<P>, AwaitedError<P[number]>>;
 export function merge<T, E>(
-  list: Iterable<FutureLike<T, E>> | ArrayLike<FutureLike<T, E>>
+  list: Iterable<FutureLike<T, E>>
 ): Future<readonly T[], E>;
 export function merge<T, E>(
-  list: Iterable<PromiseLike<T>> | ArrayLike<PromiseLike<T>>
+  list: Iterable<PromiseLike<T>>
 ): Future<readonly T[], E>;
 export function merge<T>(
-  list: Iterable<NonThenable<T>> | ArrayLike<NonThenable<T>>
+  list: Iterable<NonThenable<T>>
 ): Future<readonly T[], never>;
 export function merge<T, E extends AwaitedError<T> = AwaitedError<T>>(
-  list: Iterable<T> | ArrayLike<T>
+  list: Iterable<T>
 ): Future<readonly Awaited<T>[], E>;
 export function merge<const P extends readonly unknown[]>(
   ...list: P
@@ -188,17 +194,11 @@ export function fail<const E>(value: E): Future<never, E>;
 export function first<const P extends readonly unknown[]>(
   list: P
 ): Future<Awaited<P[number]>, AwaitedError<P[number]>>;
-export function first<T, E>(
-  list: Iterable<FutureLike<T, E>> | ArrayLike<FutureLike<T, E>>
-): Future<T, E>;
-export function first<T, E>(
-  list: Iterable<PromiseLike<T>> | ArrayLike<PromiseLike<T>>
-): Future<T, E>;
-export function first<T>(
-  list: Iterable<NonThenable<T>> | ArrayLike<NonThenable<T>>
-): Future<T, never>;
+export function first<T, E>(list: Iterable<FutureLike<T, E>>): Future<T, E>;
+export function first<T, E>(list: Iterable<PromiseLike<T>>): Future<T, E>;
+export function first<T>(list: Iterable<NonThenable<T>>): Future<T, never>;
 export function first<T, E extends AwaitedError<T> = AwaitedError<T>>(
-  list: Iterable<T> | ArrayLike<T>
+  list: Iterable<T>
 ): Future<Awaited<T>, E>;
 export function first<const P extends readonly unknown[]>(
   ...list: P
@@ -221,29 +221,33 @@ export function oneOf<const P extends readonly unknown[]>(
   list: P
 ): Future<Awaited<P[number]>, CollectRejectedTypes<P>>;
 export function oneOf<T, E>(
-  list: Iterable<FutureLike<T, E>> | ArrayLike<FutureLike<T, E>>
+  list: Iterable<FutureLike<T, E>>
 ): Future<T, readonly E[]>;
 export function oneOf<T, E>(
-  list: Iterable<PromiseLike<T>> | ArrayLike<PromiseLike<T>>
+  list: Iterable<PromiseLike<T>>
 ): Future<T, readonly E[]>;
-export function oneOf<T>(
-  list: Iterable<NonThenable<T>> | ArrayLike<NonThenable<T>>
-): Future<T, never>;
+export function oneOf<T>(list: Iterable<NonThenable<T>>): Future<T, never>;
 export function oneOf<
   T,
   E extends readonly AwaitedError<T>[] = readonly AwaitedError<T>[]
->(list: Iterable<T> | ArrayLike<T>): Future<Awaited<T>, E>;
+>(list: Iterable<T>): Future<Awaited<T>, E>;
 export function oneOf<const P extends readonly unknown[]>(
   ...list: P
 ): Future<Awaited<P[number]>, CollectRejectedTypes<P>>;
 
-type Result<T, E> =
-  | {
-      readonly ok: T;
-    }
-  | {
-      readonly err: E;
-    };
+export type Ok<T> = {
+  readonly ok: T;
+};
+
+export type Err<E> = {
+  readonly err: E;
+};
+
+export type Result<T, E> = If<
+  IsNever<E>,
+  Ok<T>,
+  If<IsNever<T>, Err<E>, Ok<T> | Err<E>>
+>;
 
 type CollectBoth<P> = {
   readonly [K in keyof P]: Result<Awaited<P[K]>, AwaitedError<P[K]>>;
@@ -253,16 +257,16 @@ export function settle<const P extends readonly unknown[]>(
   list: P
 ): Future<CollectBoth<P>, never>;
 export function settle<T, E>(
-  list: Iterable<FutureLike<T, E>> | ArrayLike<FutureLike<T, E>>
+  list: Iterable<FutureLike<T, E>>
 ): Future<readonly Result<T, E>[], never>;
 export function settle<T, E>(
-  list: Iterable<PromiseLike<T>> | ArrayLike<PromiseLike<T>>
+  list: Iterable<PromiseLike<T>>
 ): Future<readonly Result<T, E>[], never>;
 export function settle<T>(
-  list: Iterable<NonThenable<T>> | ArrayLike<NonThenable<T>>
+  list: Iterable<NonThenable<T>>
 ): Future<readonly Result<T, never>[], never>;
 export function settle<T, E extends AwaitedError<T> = AwaitedError<T>>(
-  list: Iterable<T> | ArrayLike<T>
+  list: Iterable<T>
 ): Future<readonly Result<Awaited<T>, E>[], never>;
 export function settle<const P extends readonly unknown[]>(
   ...list: P

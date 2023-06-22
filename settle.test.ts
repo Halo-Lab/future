@@ -1,5 +1,5 @@
 import test from "node:test";
-import { deepEqual } from "node:assert/strict";
+import { ok, equal, deepEqual } from "node:assert/strict";
 
 import Future from "./index.js";
 
@@ -25,4 +25,24 @@ test("a single array argument should be treated as a list of futures for the set
   return a.then((r) =>
     deepEqual(r, [{ ok: "foo" }, { ok: false }, { err: 3 }])
   );
+});
+
+test("should treat an arrayLike as non-iterable value", async (t) => {
+  const a = Future.settle({
+    0: Future.of(""),
+    1: Future.of(2),
+    2: Future.of([true]),
+    length: 3,
+  });
+
+  return a.then((result) => {
+    ok(Array.isArray(result));
+    equal(result.length, 1);
+    equal(typeof result[0].ok, "object");
+    ok("length" in result[0].ok);
+    equal(result[0].ok.length, 3);
+    ok(Future.is(result[0].ok[0]));
+    ok(Future.is(result[0].ok[1]));
+    ok(Future.is(result[0].ok[2]));
+  });
 });
