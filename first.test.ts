@@ -29,6 +29,18 @@ test("a single array argument should be treated as a list of futures for the fir
   return a.then((n) => equal(n, 4));
 });
 
+test("a single iterable argument should be treated as a list of futures for the first function", async () => {
+  const foo = Object.assign(() => {}, {
+    *[Symbol.iterator]() {
+      yield* [Future.of(4), Future.of(3), Future.fail("foo")];
+    },
+  });
+
+  const a = Future.first(foo);
+
+  return a.then((n) => equal(n, 4));
+});
+
 test("should treat an arrayLike as non-iterable value", async (t) => {
   const a = Future.first({
     0: Future.of(""),

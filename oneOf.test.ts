@@ -29,6 +29,22 @@ test("a single array argument should be treated as a list of futures for the one
   return a.then((s) => equal(s, "foo"));
 });
 
+test("a single iterable argument should be treated as a list of futures for the oneOf function", async () => {
+  const foo = Object.assign(() => {}, {
+    *[Symbol.iterator]() {
+      yield* [
+        Future.make<string, never>((ok) => setTimeout(() => ok("foo"), 10)),
+        Future.make<boolean, never>((ok) => setTimeout(() => ok(false), 20)),
+        Future.fail(3),
+      ];
+    },
+  });
+
+  const a = Future.oneOf(foo);
+
+  return a.then((s) => equal(s, "foo"));
+});
+
 test("should treat an arrayLike as non-iterable value", async (t) => {
   const a = Future.oneOf({
     0: Future.of(""),

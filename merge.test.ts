@@ -28,7 +28,7 @@ test("a single array argument should be treated as a list of futures for the mer
   });
 });
 
-test("should treat an arrayLike as non-iterable value", async (t) => {
+test("should treat an arrayLike as non-iterable value", async () => {
   const a = Future.merge({
     0: Future.of(""),
     1: Future.of(2),
@@ -45,5 +45,19 @@ test("should treat an arrayLike as non-iterable value", async (t) => {
     ok(Future.is(result[0][0]));
     ok(Future.is(result[0][1]));
     ok(Future.is(result[0][2]));
+  });
+});
+
+test("a single iterable should be treated as a list of futures for the merge", async () => {
+  const foo = Object.assign(() => {}, {
+    *[Symbol.iterator]() {
+      yield* [Future.of(""), Future.of(2), Future.of([true])];
+    },
+  });
+
+  const a = Future.merge(foo);
+
+  return a.then((result) => {
+    deepEqual(result, ["", 2, [true]]);
   });
 });

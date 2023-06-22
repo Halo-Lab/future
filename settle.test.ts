@@ -27,7 +27,25 @@ test("a single array argument should be treated as a list of futures for the set
   );
 });
 
-test("should treat an arrayLike as non-iterable value", async (t) => {
+test("a single iterable argument should be treated as a list of futures for the settle function", async () => {
+  const foo = Object.assign(() => {}, {
+    *[Symbol.iterator]() {
+      yield* [
+        Future.make<string, never>((ok) => setTimeout(() => ok("foo"), 10)),
+        Future.make<boolean, never>((ok) => setTimeout(() => ok(false), 20)),
+        Future.fail(3),
+      ];
+    },
+  });
+
+  const a = Future.settle(foo);
+
+  return a.then((r) =>
+    deepEqual(r, [{ ok: "foo" }, { ok: false }, { err: 3 }])
+  );
+});
+
+test("should treat an arrayLike as non-iterable value", async () => {
   const a = Future.settle({
     0: Future.of(""),
     1: Future.of(2),

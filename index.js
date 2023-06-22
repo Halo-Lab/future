@@ -2,16 +2,12 @@ function isFunction(value) {
   return typeof value === "function";
 }
 
-function isObject(value) {
-  return value != null && typeof value === "object";
-}
-
 export function isThenable(value) {
-  return isObject(value) && isFunction(value.then);
+  return value != null && isFunction(value.then);
 }
 
 function isIterable(value) {
-  return isObject(value) && isFunction(value[Symbol.iterator]);
+  return value != null && isFunction(value[Symbol.iterator]);
 }
 
 export function spawn(callback, parameters = []) {
