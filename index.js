@@ -11,7 +11,7 @@ function isIterable(value) {
 }
 
 export function spawn(callback, parameters = []) {
-  return make((ok, err) => {
+  return from((ok, err) => {
     try {
       ok(callback(...parameters));
     } catch (error) {
@@ -42,12 +42,12 @@ export function first(...futureLikes) {
   return Promise.race(flatFutureLikes(futureLikes));
 }
 
-export function make(executor) {
+export function from(executor) {
   return new Promise(executor);
 }
 
 export function oneOf(...futureLikes) {
-  return make((ok, err) => {
+  return from((ok, err) => {
     const errors = [];
     let settledErrorsAmount = 0;
 
@@ -58,7 +58,7 @@ export function oneOf(...futureLikes) {
           settledErrorsAmount += 1;
 
           settledErrorsAmount === list.length && err(errors);
-        })
+        }),
     );
   });
 }
@@ -68,9 +68,9 @@ export function settle(...futureLikes) {
     Array.from(flatFutureLikes(futureLikes)).map((like) =>
       of(like).then(
         (ok) => ({ ok }),
-        (err) => ({ err })
-      )
-    )
+        (err) => ({ err }),
+      ),
+    ),
   );
 }
 
@@ -97,14 +97,14 @@ export function after(futureLike, callback) {
     ? (actualFutureLike) => after(actualFutureLike, futureLike)
     : futureLike.then(
         (value) => of(callback()).then(() => value),
-        (error) => of(callback()).then(() => fail(error))
+        (error) => of(callback()).then(() => fail(error)),
       );
 }
 
 export function apply(futureLikeWithValue, futureLikeWithFunction) {
   return futureLikeWithFunction
     ? map(merge(futureLikeWithValue, futureLikeWithFunction), ([value, fn]) =>
-        fn(value)
+        fn(value),
       )
     : (anotherFutureLikeWithValue) =>
         apply(anotherFutureLikeWithValue, futureLikeWithValue);
@@ -115,7 +115,7 @@ export default {
   is: isThenable,
   map,
   fail,
-  make,
+  from,
   oneOf,
   merge,
   spawn,

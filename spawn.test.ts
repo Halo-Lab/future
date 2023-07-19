@@ -12,13 +12,13 @@ expectType<Future.Self<"foo", never>>(Future.spawn(() => Future.of("foo")));
 // Expect the resulting Future correctly inherit Right type of the PromiseLike
 // returned by the callback. Left type should be unknown by default.
 expectType<Future.Self<"foo", unknown>>(
-  Future.spawn(() => Promise.resolve("foo"))
+  Future.spawn(() => Promise.resolve("foo")),
 );
 
 // Allow to change the Left type inherited from the PromiseLike
 // when the latter is returned from the callback.
 expectType<Future.Self<"foo", 1>>(
-  Future.spawn<"foo", 1>(() => Promise.resolve("foo"))
+  Future.spawn<"foo", 1>(() => Promise.resolve("foo")),
 );
 
 // If a callback returns a non-thenable value, it's type should be inherited by the Future
@@ -33,20 +33,20 @@ expectType<Future.Self<number, "error">>(Future.spawn(() => 3));
 // from the FutureLike.
 expectType<Future.Self<number | "hello", "bye">>(
   Future.spawn(() =>
-    Math.random() > 0.1 ? Future.spawn<number, "bye">(() => 1) : "hello"
-  )
+    Math.random() > 0.1 ? Future.spawn<number, "bye">(() => 1) : "hello",
+  ),
 );
 
 // If a callback returns PromiseLike and a non-thenable, the resulting Future
 // has to inherit the Right type from PromiseLike and non-thenable and the Left
 // infer as unknown by default.
 expectType<Future.Self<number | "hello", unknown>>(
-  Future.spawn(() => (Math.random() > 0.1 ? Promise.resolve(1) : "hello"))
+  Future.spawn(() => (Math.random() > 0.1 ? Promise.resolve(1) : "hello")),
 );
 
 // If a callback returns PromiseLike and a non-thenable, the Left type should be configurable.
 expectType<Future.Self<number | "hello", "configurable error">>(
-  Future.spawn(() => (Math.random() > 0.1 ? Promise.resolve(1) : "hello"))
+  Future.spawn(() => (Math.random() > 0.1 ? Promise.resolve(1) : "hello")),
 );
 
 // TODO: write tests for cases with arguments for the callback.

@@ -13,40 +13,40 @@ expectType<
 // If error types are different, they have to be united.
 expectType<
   (
-    futureLike: Future.Like<number, { foo: string }>
+    futureLike: Future.Like<number, { foo: string }>,
   ) => Future.Self<string, Error | { foo: string }>
 >(
   Future.map((value: number) =>
-    Future.make<string, Error>((ok, err) =>
-      Math.random() ? ok(String(value)) : err(new Error())
-    )
-  )<{ foo: string }>
+    Future.from<string, Error>((ok, err) =>
+      Math.random() ? ok(String(value)) : err(new Error()),
+    ),
+  )<{ foo: string }>,
 );
 
 // The returned Future should inherit the Right type from the PromiseLike returned from a callback and the Left type as unknown by default.
 expectType<
   <K = unknown>(
-    futureLike: PromiseLike<string>
+    futureLike: PromiseLike<string>,
   ) => Future.Self<boolean, unknown>
 >(Future.map((value: string) => Promise.resolve(value === "foo")));
 
 // User should be able to type the Left type manually if callback returns the PromiseLike.
 expectType<
   <K = string>(
-    promiseLike: PromiseLike<string>
+    promiseLike: PromiseLike<string>,
   ) => Future.Self<boolean, string | K>
 >(
   Future.map<string, boolean, string>((value: string) =>
-    Promise.resolve(value === "foo")
-  )
+    Promise.resolve(value === "foo"),
+  ),
 );
 
 // If a callback returns non-thenable value, the returned FutureLike or PromiseLike accepts any Left type.
 expectType<<A>(futureLike: Future.Like<number, A>) => Future.Self<number, A>>(
-  Future.map((number: number) => number + 1)
+  Future.map((number: number) => number + 1),
 );
 expectType<<A>(futureLike: Future.Like<number, A>) => Future.Self<number, A>>(
-  Future.map((number: number) => number + 1)
+  Future.map((number: number) => number + 1),
 );
 
 // Should unwrap the FutureLike or PromiseLike type if a callback returns mixed types.
@@ -55,52 +55,52 @@ expectType<
 >(Future.map((value: number) => (Math.random() ? value : Future.of("foo"))));
 expectType<
   <A>(
-    futureLike: Future.Like<number, A>
+    futureLike: Future.Like<number, A>,
   ) => Future.Self<number | "foo", unknown>
 >(
   Future.map((value: number) =>
-    Math.random() ? value : Promise.resolve("foo")
-  )
+    Math.random() ? value : Promise.resolve("foo"),
+  ),
 );
 
 // If a callback returns a non-thenable and the PromiseLike, there should be ability to manually declare Left type.
 expectType<
   <A>(
-    futureLike: Future.Like<number, A>
+    futureLike: Future.Like<number, A>,
   ) => Future.Self<number | string, A | boolean>
 >(
   Future.map<number, number | Promise<string>, boolean>((value: number) =>
-    Math.random() ? value + 1 : Promise.resolve("foo")
-  )
+    Math.random() ? value + 1 : Promise.resolve("foo"),
+  ),
 );
 
 // The returned Future should inherit the Right and Left types from the FutureLike returned from a callback.
 expectType<Future.Self<boolean, never>>(
-  Future.map(Future.of("baz"), (value) => Future.of(value === "baz"))
+  Future.map(Future.of("baz"), (value) => Future.of(value === "baz")),
 );
 
 // The returned Future should inherit the Right type from the PromiseLike returned from a callback and the Left type as unknown by default.
 expectType<Future.Self<boolean, unknown>>(
   Future.map(Promise.resolve("baz"), (value) =>
-    Promise.resolve(value === "foo")
-  )
+    Promise.resolve(value === "foo"),
+  ),
 );
 
 // User should be able to type the Left type manually if callback returns the PromiseLike.
 expectType<Future.Self<boolean, string>>(
   Future.map(Promise.resolve("foo"), (value) =>
-    Promise.resolve(value === "foo")
-  )
+    Promise.resolve(value === "foo"),
+  ),
 );
 
 // If a callback returns non-thenable value, the returned FutureLike infers the Left type.
 expectType<Future.Self<number, never>>(
-  Future.map(Future.of(9), (number) => number + 1)
+  Future.map(Future.of(9), (number) => number + 1),
 );
 
 // If a callback returns non-thenable value, the returned PromiseLike accepts any Left type.
 expectType<Future.Self<number, string>>(
-  Future.map(Promise.resolve(10), (number) => number + 1)
+  Future.map(Promise.resolve(10), (number) => number + 1),
 );
 
 // Should unwrap the FutureLike or PromiseLike type if a callback returns mixed types.
@@ -110,21 +110,21 @@ expectType<Future.Self<number | "foo", "bar">>(
       if (Math.random()) return 1;
       else throw "bar";
     }),
-    (value) => (Math.random() ? value : Future.of("foo"))
-  )
+    (value) => (Math.random() ? value : Future.of("foo")),
+  ),
 );
 expectType<Future.Self<number | "foo", unknown>>(
   Future.map(Promise.resolve(10), (value) =>
-    Math.random() ? value : Promise.resolve("foo")
-  )
+    Math.random() ? value : Promise.resolve("foo"),
+  ),
 );
 
 // If a callback returns a non-thenable and the PromiseLike, there should be ability to manually declare Left type.
 expectType<Future.Self<number | string, boolean | "baz">>(
   Future.map<number, "baz", number | Promise<string>, boolean>(
     Promise.resolve(10),
-    (value) => (Math.random() ? value + 1 : Promise.resolve("foo"))
-  )
+    (value) => (Math.random() ? value + 1 : Promise.resolve("foo")),
+  ),
 );
 
 test("map function should transform a resolved value of the Future", async () => {

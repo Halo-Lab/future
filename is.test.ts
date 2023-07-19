@@ -18,7 +18,7 @@ test("is function should return true for", async (context) => {
         then(f: (value: boolean) => void) {
           f(false);
         },
-      })
+      }),
     );
   });
 });

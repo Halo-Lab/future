@@ -2,7 +2,7 @@ import "./is.test.js";
 import "./of.test.js";
 import "./map.test.js";
 import "./fail.test.js";
-import "./make.test.js";
+import "./from.test.js";
 import "./after.test.js";
 import "./apply.test.js";
 import "./merge.test.js";

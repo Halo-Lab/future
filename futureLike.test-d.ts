@@ -45,8 +45,8 @@ expectType<Future.Like<string | number, never>>(futureLike.then(null, () => 4));
 expectType<Future.Like<boolean | string[], never>>(
   futureLike.then(
     () => false,
-    () => [""]
-  )
+    () => [""],
+  ),
 );
 
 {
@@ -57,18 +57,18 @@ expectType<Future.Like<boolean | string[], never>>(
   // error types and resolved type is changed to the one which is carried by a type returned by
   // onresolved callback.
   expectType<Future.Like<{ readonly foo: string }, number | TypeError>>(
-    futureLike.then((_value) => futureLike2)
+    futureLike.then((_value) => futureLike2),
   );
 }
 
 // If onresolved callback returns PromiseLike, the error type of the resulting FutureLike
 // should be inferred as unknown.
 expectType<Future.Like<boolean, unknown>>(
-  futureLike.then((value) => Promise.resolve(value === "true"))
+  futureLike.then((value) => Promise.resolve(value === "true")),
 );
 
 // If onrejected callback returns PromiseLike, the error type of the resulting FutureLike
 // should be inferred as unknown and resolved types should be combined.
 expectType<Future.Like<string | boolean, unknown>>(
-  futureLike.then(null, (value) => Promise.resolve(value.name === "TypeError"))
+  futureLike.then(null, (value) => Promise.resolve(value.name === "TypeError")),
 );

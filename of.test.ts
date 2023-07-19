@@ -21,7 +21,7 @@ expectNotType<Future.Self<string, boolean>>(Future.of(Promise.resolve("foo")));
 
 // Left type should be configurable if the PromiseLike is an argument.
 expectType<Future.Self<string, number>>(
-  Future.of<string, number>(Promise.resolve("foo"))
+  Future.of<string, number>(Promise.resolve("foo")),
 );
 
 // Invokation of the of function without any argument creates an empty resolved Future.

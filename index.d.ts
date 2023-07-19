@@ -31,34 +31,34 @@ export interface FutureLike<T, E> {
 
   then(
     onfulfilled?: null | undefined,
-    onrejected?: null | undefined
+    onrejected?: null | undefined,
   ): FutureLike<T, E>;
 
   then<K, O = never>(
     onfulfilled: (value: T) => K | FutureLike<K, O>,
-    onrejected?: null | undefined
+    onrejected?: null | undefined,
   ): FutureLike<K, O | E>;
   then<K, O>(
     onfulfilled: (value: T) => K | PromiseLike<K>,
-    onrejected?: null | undefined
+    onrejected?: null | undefined,
   ): FutureLike<K, O | E>;
 
   then<W = T, O = never>(
     onfulfilled: null | undefined,
-    onrejected: (error: E) => W | FutureLike<W, O>
+    onrejected: (error: E) => W | FutureLike<W, O>,
   ): FutureLike<T | W, O>;
   then<W = T, O = unknown>(
     onfulfilled: null | undefined,
-    onrejected: (error: E) => W | PromiseLike<W>
+    onrejected: (error: E) => W | PromiseLike<W>,
   ): FutureLike<T | W, O>;
 
   then<K, O = never, W = K, G = O>(
     onfulfilled: (value: T) => K | FutureLike<K, O>,
-    onrejected: (error: E) => W | FutureLike<W, G>
+    onrejected: (error: E) => W | FutureLike<W, G>,
   ): FutureLike<K | W, O | G>;
   then<K, O, W = K, G = O>(
     onfulfilled: (value: T) => K | PromiseLike<K>,
-    onrejected: (error: E) => W | PromiseLike<W>
+    onrejected: (error: E) => W | PromiseLike<W>,
   ): FutureLike<K | W, O | G>;
 }
 
@@ -68,42 +68,42 @@ export interface Future<T, E> {
 
   then(
     onfulfilled?: null | undefined,
-    onrejected?: null | undefined
+    onrejected?: null | undefined,
   ): Future<T, E>;
 
   then<K, O = never>(
     onfulfilled: (value: T) => K | FutureLike<K, O>,
-    onrejected?: null | undefined
+    onrejected?: null | undefined,
   ): Future<K, O | E>;
   then<K, O>(
     onfulfilled: (value: T) => K | PromiseLike<K>,
-    onrejected?: null | undefined
+    onrejected?: null | undefined,
   ): Future<K, O | E>;
 
   then<W = T, O = never>(
     onfulfilled: null | undefined,
-    onrejected: (error: E) => W | FutureLike<W, O>
+    onrejected: (error: E) => W | FutureLike<W, O>,
   ): Future<T | W, O>;
   then<W = T, O = unknown>(
     onfulfilled: null | undefined,
-    onrejected: (error: E) => W | PromiseLike<W>
+    onrejected: (error: E) => W | PromiseLike<W>,
   ): Future<T | W, O>;
 
   then<K, O = never, W = K, G = O>(
     onfulfilled: (value: T) => K | FutureLike<K, O>,
-    onrejected: (error: E) => W | FutureLike<W, G>
+    onrejected: (error: E) => W | FutureLike<W, G>,
   ): Future<K | W, O | G>;
   then<K, O, W = K, G = O>(
     onfulfilled: (value: T) => K | PromiseLike<K>,
-    onrejected: (error: E) => W | PromiseLike<W>
+    onrejected: (error: E) => W | PromiseLike<W>,
   ): Future<K | W, O | G>;
 
   catch(onrejected?: null | undefined): Future<T, E>;
   catch<R = T, O = never>(
-    onrejected: (error: E) => R | FutureLike<R, O>
+    onrejected: (error: E) => R | FutureLike<R, O>,
   ): Future<T | R, O>;
   catch<R = T, O = unknown>(
-    onrejected: (error: E) => R | PromiseLike<R>
+    onrejected: (error: E) => R | PromiseLike<R>,
   ): Future<T | R, O>;
 
   finally(callback?: null | undefined): Future<T, E>;
@@ -111,7 +111,7 @@ export interface Future<T, E> {
   finally<R, O>(callback: () => PromiseLike<R>): Future<T, E | O>;
   finally<R>(callback: () => NonThenable<R>): Future<T, E>;
   finally<R, K extends AwaitedError<R> = AwaitedError<R>>(
-    callback: () => R
+    callback: () => R,
   ): Future<T, E | K>;
 }
 
@@ -138,44 +138,44 @@ export function isThenable<T, E>(value: unknown): value is FutureLike<T, E>;
 export function spawn<T, E>(callback: () => FutureLike<T, E>): Future<T, E>;
 export function spawn<T, E>(callback: () => PromiseLike<T>): Future<T, E>;
 export function spawn<T, E = never>(
-  callback: () => NonThenable<T>
+  callback: () => NonThenable<T>,
 ): Future<T, E>;
 export function spawn<T, E extends AwaitedError<T> = AwaitedError<T>>(
-  callback: () => T
+  callback: () => T,
 ): Future<Awaited<T>, E>;
 export function spawn<T, E, const P extends readonly unknown[]>(
   callback: (...args: P) => FutureLike<T, E>,
-  parameters: P
+  parameters: P,
 ): Future<T, E>;
 export function spawn<T, E, const P extends readonly unknown[]>(
   callback: (...args: P) => PromiseLike<T>,
-  parameters: P
+  parameters: P,
 ): Future<T, E>;
 export function spawn<
   T,
   E = never,
-  const P extends readonly unknown[] = readonly unknown[]
+  const P extends readonly unknown[] = readonly unknown[],
 >(callback: (...args: P) => NonThenable<T>, parameters: P): Future<T, E>;
 export function spawn<
   T,
   E extends AwaitedError<T> = AwaitedError<T>,
-  const P extends readonly unknown[] = readonly unknown[]
+  const P extends readonly unknown[] = readonly unknown[],
 >(callback: (...args: P) => T, parameters: P): Future<Awaited<T>, E>;
 
 export function merge<const P extends readonly unknown[]>(
-  list: P
+  list: P,
 ): Future<CollectResolvedTypes<P>, AwaitedError<P[number]>>;
 export function merge<T, E>(
-  list: Iterable<FutureLike<T, E>>
+  list: Iterable<FutureLike<T, E>>,
 ): Future<readonly T[], E>;
 export function merge<T, E>(
-  list: Iterable<PromiseLike<T>>
+  list: Iterable<PromiseLike<T>>,
 ): Future<readonly T[], E>;
 export function merge<T>(
-  list: Iterable<NonThenable<T>>
+  list: Iterable<NonThenable<T>>,
 ): Future<readonly T[], never>;
 export function merge<T, E extends AwaitedError<T> = AwaitedError<T>>(
-  list: Iterable<T>
+  list: Iterable<T>,
 ): Future<readonly Awaited<T>[], E>;
 export function merge<const P extends readonly unknown[]>(
   ...list: P
@@ -192,44 +192,44 @@ export function fail<T, E>(value: PromiseLike<T>): Future<never, T | E>;
 export function fail<const E>(value: E): Future<never, E>;
 
 export function first<const P extends readonly unknown[]>(
-  list: P
+  list: P,
 ): Future<Awaited<P[number]>, AwaitedError<P[number]>>;
 export function first<T, E>(list: Iterable<FutureLike<T, E>>): Future<T, E>;
 export function first<T, E>(list: Iterable<PromiseLike<T>>): Future<T, E>;
 export function first<T>(list: Iterable<NonThenable<T>>): Future<T, never>;
 export function first<T, E extends AwaitedError<T> = AwaitedError<T>>(
-  list: Iterable<T>
+  list: Iterable<T>,
 ): Future<Awaited<T>, E>;
 export function first<const P extends readonly unknown[]>(
   ...list: P
 ): Future<Awaited<P[number]>, AwaitedError<P[number]>>;
 
-export function make<T, E>(
+export function from<T, E>(
   executor: (
     ok: (value: T | FutureLike<T, E>) => void,
-    err: (error: E) => void
-  ) => void
+    err: (error: E) => void,
+  ) => void,
 ): Future<T, E>;
-export function make<T, E>(
+export function from<T, E>(
   executor: (
     ok: (value: T | PromiseLike<T>) => void,
-    err: (error: E) => void
-  ) => void
+    err: (error: E) => void,
+  ) => void,
 ): Future<T, E>;
 
 export function oneOf<const P extends readonly unknown[]>(
-  list: P
+  list: P,
 ): Future<Awaited<P[number]>, CollectRejectedTypes<P>>;
 export function oneOf<T, E>(
-  list: Iterable<FutureLike<T, E>>
+  list: Iterable<FutureLike<T, E>>,
 ): Future<T, readonly E[]>;
 export function oneOf<T, E>(
-  list: Iterable<PromiseLike<T>>
+  list: Iterable<PromiseLike<T>>,
 ): Future<T, readonly E[]>;
 export function oneOf<T>(list: Iterable<NonThenable<T>>): Future<T, never>;
 export function oneOf<
   T,
-  E extends readonly AwaitedError<T>[] = readonly AwaitedError<T>[]
+  E extends readonly AwaitedError<T>[] = readonly AwaitedError<T>[],
 >(list: Iterable<T>): Future<Awaited<T>, E>;
 export function oneOf<const P extends readonly unknown[]>(
   ...list: P
@@ -254,248 +254,248 @@ type CollectBoth<P> = {
 };
 
 export function settle<const P extends readonly unknown[]>(
-  list: P
+  list: P,
 ): Future<CollectBoth<P>, never>;
 export function settle<T, E>(
-  list: Iterable<FutureLike<T, E>>
+  list: Iterable<FutureLike<T, E>>,
 ): Future<readonly Result<T, E>[], never>;
 export function settle<T, E>(
-  list: Iterable<PromiseLike<T>>
+  list: Iterable<PromiseLike<T>>,
 ): Future<readonly Result<T, E>[], never>;
 export function settle<T>(
-  list: Iterable<NonThenable<T>>
+  list: Iterable<NonThenable<T>>,
 ): Future<readonly Result<T, never>[], never>;
 export function settle<T, E extends AwaitedError<T> = AwaitedError<T>>(
-  list: Iterable<T>
+  list: Iterable<T>,
 ): Future<readonly Result<Awaited<T>, E>[], never>;
 export function settle<const P extends readonly unknown[]>(
   ...list: P
 ): Future<CollectBoth<P>, never>;
 
 export function map<T, R, E>(
-  callback: (value: T) => FutureLike<R, E>
+  callback: (value: T) => FutureLike<R, E>,
 ): <K = E>(futureLike: FutureLike<T, K>) => Future<R, E | K>;
 export function map<T, R, E>(
-  callback: (value: T) => PromiseLike<R>
+  callback: (value: T) => PromiseLike<R>,
 ): <K = E>(promiseLike: PromiseLike<T>) => Future<R, E | K>;
 export function map<T, R>(
-  callback: (value: T) => NonThenable<R>
+  callback: (value: T) => NonThenable<R>,
 ): <E>(futureLike: FutureLike<T, E>) => Future<R, E>;
 export function map<T, R, K extends AwaitedError<R> = AwaitedError<R>>(
-  callback: (value: T) => R
+  callback: (value: T) => R,
 ): <E>(futureLike: FutureLike<T, E>) => Future<Awaited<R>, E | K>;
 export function map<T, E, R, K = E>(
   futureLike: FutureLike<T, E>,
-  callback: (value: T) => FutureLike<R, K>
+  callback: (value: T) => FutureLike<R, K>,
 ): Future<R, E | K>;
 export function map<T, E, R, K = E>(
   promiseLike: PromiseLike<T>,
-  callback: (value: T) => PromiseLike<R>
+  callback: (value: T) => PromiseLike<R>,
 ): Future<R, E | K>;
 export function map<T, E, R>(
   futureLike: FutureLike<T, E>,
-  callback: (value: T) => NonThenable<R>
+  callback: (value: T) => NonThenable<R>,
 ): Future<R, E>;
 export function map<T, E, R>(
   promiseLike: PromiseLike<T>,
-  callback: (value: T) => NonThenable<R>
+  callback: (value: T) => NonThenable<R>,
 ): Future<R, E>;
 export function map<T, E, R, K extends AwaitedError<R> = AwaitedError<R>>(
   futureLike: FutureLike<T, E>,
-  callback: (value: T) => R
+  callback: (value: T) => R,
 ): Future<Awaited<R>, E | K>;
 export function map<T, E, R, K extends AwaitedError<R> = AwaitedError<R>>(
   promiseLike: PromiseLike<T>,
-  callback: (value: T) => R
+  callback: (value: T) => R,
 ): Future<Awaited<R>, E | K>;
 
 export function mapErr<E, K, R>(
-  callback: (value: E) => FutureLike<K, R>
+  callback: (value: E) => FutureLike<K, R>,
 ): <T>(futureLike: FutureLike<T, E>) => Future<T, K | R>;
 export function mapErr<E, K, R>(
-  callback: (value: E) => PromiseLike<K>
+  callback: (value: E) => PromiseLike<K>,
 ): <T>(promiseLike: PromiseLike<T>) => Future<T, K | R>;
 export function mapErr<E, K>(
-  callback: (value: E) => NonThenable<K>
+  callback: (value: E) => NonThenable<K>,
 ): <T>(futureLike: FutureLike<T, E>) => Future<T, K>;
 export function mapErr<
   E,
   K,
-  R extends Awaited<K> | AwaitedError<K> = Awaited<K> | AwaitedError<K>
+  R extends Awaited<K> | AwaitedError<K> = Awaited<K> | AwaitedError<K>,
 >(callback: (value: E) => K): <T>(futureLike: FutureLike<T, E>) => Future<T, R>;
 export function mapErr<T, E, K, R>(
   futureLike: FutureLike<T, E>,
-  callback: (value: E) => FutureLike<K, R>
+  callback: (value: E) => FutureLike<K, R>,
 ): Future<T, K | R>;
 export function mapErr<T, E, K, R>(
   promiseLike: PromiseLike<T>,
-  callback: (value: E) => PromiseLike<K>
+  callback: (value: E) => PromiseLike<K>,
 ): Future<T, K | R>;
 export function mapErr<T, E, K>(
   futureLike: FutureLike<T, E>,
-  callback: (value: E) => NonThenable<K>
+  callback: (value: E) => NonThenable<K>,
 ): Future<T, K>;
 export function mapErr<T, E, K>(
   promiseLike: PromiseLike<T>,
-  callback: (value: E) => NonThenable<K>
+  callback: (value: E) => NonThenable<K>,
 ): Future<T, K>;
 export function mapErr<
   T,
   E,
   K,
-  R extends Awaited<K> | AwaitedError<K> = Awaited<K> | AwaitedError<K>
+  R extends Awaited<K> | AwaitedError<K> = Awaited<K> | AwaitedError<K>,
 >(futureLike: FutureLike<T, E>, callback: (value: E) => K): Future<T, R>;
 export function mapErr<
   T,
   E,
   K,
-  R extends Awaited<K> | AwaitedError<K> = Awaited<K> | AwaitedError<K>
+  R extends Awaited<K> | AwaitedError<K> = Awaited<K> | AwaitedError<K>,
 >(promiseLike: PromiseLike<T>, callback: (value: E) => K): Future<T, R>;
 
 export function recover<E, R, K = never>(
-  callback: (value: E) => FutureLike<R, K>
+  callback: (value: E) => FutureLike<R, K>,
 ): <T = R>(futureLike: FutureLike<T, E>) => Future<T | R, K>;
 export function recover<E, R, K = unknown>(
-  callback: (value: E) => PromiseLike<R>
+  callback: (value: E) => PromiseLike<R>,
 ): <T = R>(promiseLike: PromiseLike<T>) => Future<T | R, K>;
 export function recover<E, R>(
-  callback: (value: E) => NonThenable<R>
+  callback: (value: E) => NonThenable<R>,
 ): <T = R>(futureLike: FutureLike<T, E>) => Future<T | R, never>;
 export function recover<E, R, K extends AwaitedError<R> = AwaitedError<R>>(
-  callback: (value: E) => R
+  callback: (value: E) => R,
 ): <T = Awaited<R>>(futureLike: FutureLike<T, E>) => Future<T | R, K>;
 export function recover<T, E, R = T, K = never>(
   futureLike: FutureLike<T, E>,
-  callback: (value: E) => FutureLike<R, K>
+  callback: (value: E) => FutureLike<R, K>,
 ): Future<T | R, K>;
 export function recover<T, E, R = T, K = unknown>(
   promiseLike: PromiseLike<T>,
-  callback: (value: E) => PromiseLike<R>
+  callback: (value: E) => PromiseLike<R>,
 ): Future<T | R, K>;
 export function recover<T, E, R = T>(
   futureLike: FutureLike<T, E>,
-  callback: (value: E) => NonThenable<R>
+  callback: (value: E) => NonThenable<R>,
 ): Future<T | R, never>;
 export function recover<T, E, R = T>(
   promiseLike: PromiseLike<T>,
-  callback: (value: E) => NonThenable<R>
+  callback: (value: E) => NonThenable<R>,
 ): Future<T | R, never>;
 export function recover<
   T,
   E,
   R = T,
-  K extends AwaitedError<R> = AwaitedError<R>
+  K extends AwaitedError<R> = AwaitedError<R>,
 >(
   futureLike: FutureLike<T, E>,
-  callback: (value: E) => R
+  callback: (value: E) => R,
 ): Future<T | Awaited<R>, K>;
 export function recover<
   T,
   E,
   R = T,
-  K extends AwaitedError<R> = AwaitedError<R>
+  K extends AwaitedError<R> = AwaitedError<R>,
 >(
   promiseLike: PromiseLike<T>,
-  callback: (value: E) => R
+  callback: (value: E) => R,
 ): Future<T | Awaited<R>, K>;
 
 export function after<T, E>(
-  callback: () => FutureLike<T, E>
+  callback: () => FutureLike<T, E>,
 ): <A, K>(futureLike: FutureLike<A, K>) => Future<A, E | K>;
 export function after<T, E>(
-  callback: () => PromiseLike<T>
+  callback: () => PromiseLike<T>,
 ): <A, K>(promiseLike: PromiseLike<A>) => Future<A, E | K>;
 export function after<R>(
-  callback: () => NonThenable<R>
+  callback: () => NonThenable<R>,
 ): <T, E>(futureLike: FutureLike<T, E>) => Future<T, E>;
 export function after<R, K extends AwaitedError<R> = AwaitedError<R>>(
-  callback: () => R
+  callback: () => R,
 ): <T, E>(futureLike: FutureLike<T, E>) => Future<T, E | K>;
 export function after<T, E, A, K>(
   futureLike: FutureLike<T, E>,
-  callback: () => FutureLike<A, K>
+  callback: () => FutureLike<A, K>,
 ): Future<T, E | K>;
 export function after<T, E, A, K>(
   promiseLike: PromiseLike<T>,
-  callback: () => PromiseLike<A>
+  callback: () => PromiseLike<A>,
 ): Future<T, E | K>;
 export function after<T, E, R>(
   futureLike: FutureLike<T, E>,
-  callback: () => NonThenable<R>
+  callback: () => NonThenable<R>,
 ): Future<T, E>;
 export function after<T, E, R>(
   promiseLike: PromiseLike<T>,
-  callback: () => NonThenable<R>
+  callback: () => NonThenable<R>,
 ): Future<T, E>;
 export function after<T, E, R, K extends AwaitedError<R> = AwaitedError<R>>(
   futureLike: FutureLike<T, E>,
-  callback: () => R
+  callback: () => R,
 ): Future<T, E | K>;
 export function after<T, E, R, K extends AwaitedError<R> = AwaitedError<R>>(
   promiseLike: PromiseLike<T>,
-  callback: () => R
+  callback: () => R,
 ): Future<T, E | K>;
 
 export function apply<T, R, E, O = E>(
-  futureLike: FutureLike<(value: T) => FutureLike<R, E>, O>
+  futureLike: FutureLike<(value: T) => FutureLike<R, E>, O>,
 ): <K = E>(futureLike: FutureLike<T, K>) => Future<R, E | K | O>;
 export function apply<T, R, E, O = E>(
-  promiseLike: PromiseLike<(value: T) => PromiseLike<R>>
+  promiseLike: PromiseLike<(value: T) => PromiseLike<R>>,
 ): <K = E>(promiseLike: PromiseLike<T>) => Future<R, E | K | O>;
 export function apply<T, R, P>(
-  futureLike: FutureLike<(value: T) => NonThenable<R>, P>
+  futureLike: FutureLike<(value: T) => NonThenable<R>, P>,
 ): <E = P>(futureLike: FutureLike<T, E>) => Future<R, E | P>;
 export function apply<T, R, P>(
-  promiseLike: PromiseLike<(value: T) => NonThenable<R>>
+  promiseLike: PromiseLike<(value: T) => NonThenable<R>>,
 ): <E = P>(promiseLike: PromiseLike<T>) => Future<R, E | P>;
 export function apply<T, R, B, K extends AwaitedError<R> = AwaitedError<R>>(
-  futureLike: FutureLike<(value: T) => R, B>
+  futureLike: FutureLike<(value: T) => R, B>,
 ): <E = B>(futureLike: FutureLike<T, E>) => Future<Awaited<R>, E | K | B>;
 export function apply<T, R, B, K extends AwaitedError<R> = AwaitedError<R>>(
-  promiseLike: PromiseLike<(value: T) => R>
+  promiseLike: PromiseLike<(value: T) => R>,
 ): <E = B>(promiseLike: PromiseLike<T>) => Future<Awaited<R>, E | K | B>;
 export function apply<T, E, R, K = E, D = E>(
   futureLike: FutureLike<T, E>,
-  futureLikeWithCallback: FutureLike<(value: T) => FutureLike<R, K>, D>
+  futureLikeWithCallback: FutureLike<(value: T) => FutureLike<R, K>, D>,
 ): Future<R, E | K | D>;
 export function apply<T, E, R, K = E, D = E>(
   promiseLike: PromiseLike<T>,
-  promiseLikeWithCallback: PromiseLike<(value: T) => FutureLike<R, K>>
+  promiseLikeWithCallback: PromiseLike<(value: T) => FutureLike<R, K>>,
 ): Future<R, E | K | D>;
 export function apply<T, E, R, K = E>(
   futureLike: FutureLike<T, E>,
-  futureLikeWithCallback: FutureLike<(value: T) => NonThenable<R>, K>
+  futureLikeWithCallback: FutureLike<(value: T) => NonThenable<R>, K>,
 ): Future<R, E | K>;
 export function apply<T, E, R, K = E>(
   promiseLike: PromiseLike<T>,
-  promiseLikeWithCallback: PromiseLike<(value: T) => NonThenable<R>>
+  promiseLikeWithCallback: PromiseLike<(value: T) => NonThenable<R>>,
 ): Future<R, E | K>;
 export function apply<
   T,
   E,
   R,
   B = E,
-  K extends AwaitedError<R> = AwaitedError<R>
+  K extends AwaitedError<R> = AwaitedError<R>,
 >(
   futureLike: FutureLike<T, E>,
-  futureLikeWithCallback: FutureLike<(value: T) => R, B>
+  futureLikeWithCallback: FutureLike<(value: T) => R, B>,
 ): Future<Awaited<R>, E | B | K>;
 export function apply<
   T,
   E,
   R,
   B = E,
-  K extends AwaitedError<R> = AwaitedError<R>
+  K extends AwaitedError<R> = AwaitedError<R>,
 >(
   promiseLike: PromiseLike<T>,
-  promiseLikeWithCallback: PromiseLike<(value: T) => R>
+  promiseLikeWithCallback: PromiseLike<(value: T) => R>,
 ): Future<Awaited<R>, E | B | K>;
 
 type _of = typeof of;
 type _is = typeof isThenable;
 type _map = typeof map;
 type _fail = typeof fail;
-type _make = typeof make;
+type _from = typeof from;
 type _apply = typeof apply;
 type _oneOf = typeof oneOf;
 type _merge = typeof merge;
@@ -518,7 +518,7 @@ declare namespace Future {
   export const is: _is;
   export const map: _map;
   export const fail: _fail;
-  export const make: _make;
+  export const from: _from;
   export const apply: _apply;
   export const oneOf: _oneOf;
   export const merge: _merge;
