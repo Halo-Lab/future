@@ -182,14 +182,16 @@ export function merge<const P extends readonly unknown[]>(
 ): Future<CollectResolvedTypes<P>, AwaitedError<P[number]>>;
 
 export function of(): Future<void, never>;
-export function of<T, E>(value: FutureLike<T, E>): Future<T, E>;
-export function of<T, E>(value: PromiseLike<T>): Future<T, E>;
-export function of<const T>(value: T): Future<T, never>;
+export function of<T, E = never>(value: T | FutureLike<T, E>): Future<T, E>;
+export function of<T, E = unknown>(value: T | PromiseLike<T>): Future<T, E>;
 
 export function fail(): Future<never, void>;
-export function fail<T, E>(value: FutureLike<T, E>): Future<never, T | E>;
-export function fail<T, E>(value: PromiseLike<T>): Future<never, T | E>;
-export function fail<const E>(value: E): Future<never, E>;
+export function fail<T, E = never>(
+  value: T | FutureLike<T, E>,
+): Future<never, T | E>;
+export function fail<T, E = unknown>(
+  value: T | PromiseLike<T>,
+): Future<never, T | E>;
 
 export function first<const P extends readonly unknown[]>(
   list: P,

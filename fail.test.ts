@@ -9,7 +9,7 @@ import Future from "./index.js";
   const a = Future.fail("error");
 
   // Expect the fail function to infer exact type of the non-thenable value.
-  expectType<Future.Self<never, "error">>(a);
+  expectType<Future.Self<never, string>>(a);
 
   a.catch(() => {});
 }
@@ -18,7 +18,7 @@ import Future from "./index.js";
   const a = Future.fail(Future.of(1));
 
   // Expect the Future to receive the Right type of the FutureLike argument as the Left type.
-  expectType<Future.Self<never, 1>>(a);
+  expectType<Future.Self<never, number>>(a);
 
   a.catch(() => {});
 }
@@ -27,7 +27,7 @@ import Future from "./index.js";
   const a = Future.fail(Future.fail(1));
 
   // Expect the Future to receive the Left type of the FutureLike argument as the Left type.
-  expectType<Future.Self<never, 1>>(a);
+  expectType<Future.Self<never, number>>(a);
 
   a.catch(() => {});
 }
