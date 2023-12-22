@@ -64,7 +64,7 @@ export function oneOf(...futureLikes) {
 }
 
 export function settle(...futureLikes) {
-  return Promise.all(
+  return merge(
     Array.from(flatFutureLikes(futureLikes)).map((like) =>
       of(like).then(
         (ok) => ({ ok }),
